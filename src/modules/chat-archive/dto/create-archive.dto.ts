@@ -11,11 +11,33 @@ import {
 import { lowerCaseTransformer } from './lower-case.transformer';
 
 export class CreateArchiveDto {
-  @ApiPropertyOptional({ example: '1', type: String })
-  @Transform(lowerCaseTransformer)
-  sessionId?: string | null;
+  @ApiPropertyOptional({ example: '1', type: String, description: 'App id', nullable: false })
+  @IsString()
+  app_id!: string;
 
-  @ApiPropertyOptional({ example: 'test_room', type: String })
+  @ApiPropertyOptional({ example: 'test_room', type: String, description: 'Room id', nullable: false })
+  @IsString()
+  room_id?: string;
+
+  @ApiPropertyOptional({ example: '1', type: String, description: 'Last App Name' })
   @IsOptional()
-  roomName?: string | null;
+  @IsString()
+  last_app_name?: string | null;
+
+  @ApiPropertyOptional({ example: 'test_room', type: String, description: 'Last App Type Code' })
+  @IsOptional()
+  @IsString()
+  last_app_type_code?: string | null;
+
+  @ApiPropertyOptional({ example: '1', type: String, description: 'User id', nullable: false })
+  @IsString()
+  user_id?: string;
+
+  @ApiPropertyOptional({ example: 'test_room', type: String, description: 'question', nullable: false })
+  @IsString()
+  question!: string;
+
+  @ApiPropertyOptional({ example: '1', type: String, description: 'answer', nullable: false })
+  @IsString()
+  answer!: string;
 }

@@ -19,6 +19,7 @@ import { DbQueryLogPatch } from './common/logging/db-query-log-patch';
 import { SystemModule } from './modules/system/system.module';
 import { UserModule } from './modules/user/user.module';
 import { GeneralModule } from './modules/general-chat/general.module';
+import { ArchiveModule } from './modules/chat-archive/archive.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { GeneralModule } from './modules/general-chat/general.module';
       }),
     }),
     GeneralModule,
+    ArchiveModule,
     HealthModule,
     AuthModule,
     MemberModule,

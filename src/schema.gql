@@ -2,6 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ArchiveEntity {
+  answer: String!
+  app_id: String!
+  archive_id: String!
+  created_at: DateTime!
+  last_app_name: String!
+  last_app_type_code: String!
+  question: String!
+  room_id: String!
+  user_id: String!
+}
+
+input ArchiveUpsertInput {
+  answer: String!
+  app_id: String!
+  archive_id: String!
+  created_at: String
+  last_app_name: String!
+  last_app_type_code: String!
+  question: String!
+  room_id: String!
+  user_id: String!
+}
+
 type AuthUser {
   roles: [String!]!
   userId: String!
@@ -102,6 +126,8 @@ type MenuEntity {
 }
 
 type Mutation {
+  archiveDelete(archiveId: String!): Boolean!
+  archiveUpsert(archiveId: String!, roomName: ArchiveUpsertInput!): ArchiveEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
@@ -116,6 +142,8 @@ type Mutation {
 
 type Query {
   aiList: [GeneralEntity!]!
+  archive(archiveId: String!): ArchiveEntity!
+  archiveList: [ArchiveEntity!]!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!

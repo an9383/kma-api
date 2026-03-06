@@ -21,8 +21,8 @@ export class ArchiveResolver {
   }
 
   @Query(() => ArchiveEntity)
-  archive(@Args('sessionId') sessionId: string) {
-    return this.svc.findOne(sessionId);
+  archive(@Args('archiveId') archiveId: string) {
+    return this.svc.findOne(archiveId);
   }
 
   /**
@@ -32,8 +32,8 @@ export class ArchiveResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => ArchiveEntity)
-  archiveUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: ArchiveUpsertInput) {
-    return this.svc.upsert(sessionId, body);    
+  archiveUpsert(@Args('archiveId') archiveId: string, @Args('roomName') body: ArchiveUpsertInput) {
+    return this.svc.upsert(archiveId, body);    
   }
   
 
@@ -44,7 +44,7 @@ export class ArchiveResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => Boolean)
-  archiveDelete(@Args('sessionId') sessionId: string) {
-    return this.svc.remove(sessionId);
+  archiveDelete(@Args('archiveId') archiveId: string) {
+    return this.svc.remove(archiveId);
   }
 }

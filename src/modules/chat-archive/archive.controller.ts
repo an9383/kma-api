@@ -2,7 +2,7 @@ import { Controller, Req, Get, Post, Put, Patch, Delete, Body, Query, Param, Log
 import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { ArchiveService } from './archive.service';
 import { ArchiveEntity } from './entities/archive.entity';
-import { ArchiveSearchListInput, ArchiveUpsertInput } from './dto/archive.input';
+import { ArchiveUpsertInput } from './dto/archive.input';
 import { UpdateArchiveDto } from './dto/update-archive.dto';
 import { ArchiveResolver } from './archive.resolver';
 
@@ -30,35 +30,40 @@ export class ArchiveController {
     return { items };
   }
 
-   // sessionId로 단건 조회
-  @Get(':sessionId')
-  async findOne(@Param('sessionId') sessionId: string) {
-    const items = await this.archiveResolver.archive(sessionId);
+   // archiveId로 단건 조회
+  @Get(':archiveId')
+  async findOne(@Param('archiveId') archiveId: string) {
+    const items = await this.archiveResolver.archive(archiveId);
     return { items };
   }
 
-  @Post(':sessionId')
+  @Post(':archiveId')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'sessionId', type: String, required: true})
+  @ApiParam({ name: 'archiveId', type: String, required: true})
   async update(
-    @Param('sessionId') sessionId: ArchiveEntity['session_id'],
+    @Param('archiveId') archiveId: ArchiveEntity['archive_id'],
     @Body() dto: UpdateArchiveDto): Promise<ArchiveEntity> {
-    const { room, user_id } = dto;
-    this.logger.log({ sessionId, room, user_id });
-    return this.archiveResolver.archiveUpsert(sessionId, {
-      session_id: sessionId,
-      room_name: room,
-      user_id: user_id,
+    const { app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id } = dto;
+    this.logger.log({ archiveId, app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id });
+    return this.archiveResolver.archiveUpsert(archiveId, {
+      archive_id: archiveId,
+      app_id: app_id,
+      room_id: room_id,
+      last_app_name: last_app_name,
+      last_app_type_code: last_app_type_code,
+      question: question,
+      answer: answer,
+      user_id: user_id
     });
   }
 
-  @Delete(':sessionId')
+  @Delete(':archiveId')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'sessionId', type: String, required: true})
+  @ApiParam({ name: 'archiveId', type: String, required: true})
   async delete(
-    @Param('sessionId') sessionId: string) {
-    this.logger.log({ sessionId});
-    const items = await this.archiveResolver.archiveDelete(sessionId);
+    @Param('archiveId') archiveId: string) {
+    this.logger.log({ archiveId});
+    const items = await this.archiveResolver.archiveDelete(archiveId);
     return { items };
   }
 }
