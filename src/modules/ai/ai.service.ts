@@ -16,19 +16,6 @@ export class AiService {
     return { ok: true, now: new Date().toISOString() };
   }
 
-  // /** 목록 조회 */
-  // async list(startDate?: string, endDate?: string) {
-  //   const qb = this.repo.createQueryBuilder('m');
-
-  //     if (startDate && endDate) {
-  //       qb.andWhere('m.created_at BETWEEN :start AND :end', {
-  //         start: `${startDate} 00:00:00`,
-  //         end: `${endDate} 23:59:59.999`,
-  //       });
-  //     }
-  //     return await qb.getMany();
-  //   }
-
   /** 목록 조회 */
   async list() {
     const qb = this.repo.createQueryBuilder('m');

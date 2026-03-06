@@ -61,6 +61,4 @@ export class AiController {
     const items = await this.aiResolver.aiDelete(sessionId);
     return { items };
   }
-
-
 }

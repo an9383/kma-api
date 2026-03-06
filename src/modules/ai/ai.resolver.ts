@@ -15,11 +15,6 @@ import { UpdateAiDto } from './dto/update-ai.dto';
 export class AiResolver {
   constructor(private svc: AiService) {}
 
-  // @Query(() => [AiEntity])
-  // async aiList(@Args('startDate') startDate: string, @Args('endDate') endDate: string) {
-  //   return this.svc.list(startDate, endDate);
-  // }
-
   @Query(() => [AiEntity])
   async aiList() {
     return this.svc.list();
