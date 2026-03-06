@@ -6,8 +6,8 @@ import { GeneralSearchListInput, GeneralUpsertInput } from './dto/general.input'
 import { UpdateAiDto } from './dto/update-general.dto';
 import { GeneralResolver } from './general.resolver';
 
-@ApiTags('api/ai')
-@Controller('api/ai')
+@ApiTags('api/general')
+@Controller('api/general')
 export class GeneralController {
   private readonly logger = new Logger(GeneralController.name);
   constructor(private readonly generalResolver: GeneralResolver, private readonly generalService: GeneralService) {}
