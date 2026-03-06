@@ -1,27 +1,27 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards, Logger, } from '@nestjs/common';
-import { GeneralEntity } from './entities/general.entity';
-import { GeneralService } from './general.service';
-import { GeneralUpsertInput, GeneralSearchListInput } from './dto/general.input';
+import { ArchiveEntity } from './entities/archive.entity';
+import { ArchiveService } from './archive.service';
+import { ArchiveUpsertInput, ArchiveSearchListInput } from './dto/archive.input';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { UpdateGeneralDto } from './dto/update-general.dto';
+import { UpdateArchiveDto } from './dto/update-archive.dto';
 
 /**
  * 회원 도메인의 데이터 조작 및 조회를 담당하는 인터페이스 레이어입니다
  */
-@Resolver(() => GeneralEntity)
-export class GeneralResolver {
-  constructor(private svc: GeneralService) {}
+@Resolver(() => ArchiveEntity)
+export class ArchiveResolver {
+  constructor(private svc: ArchiveService) {}
 
-  @Query(() => [GeneralEntity])
-  async aiList() {
+  @Query(() => [ArchiveEntity])
+  async archiveList() {
     return this.svc.list();
   }
 
-  @Query(() => GeneralEntity)
-  general(@Args('sessionId') sessionId: string) {
+  @Query(() => ArchiveEntity)
+  archive(@Args('sessionId') sessionId: string) {
     return this.svc.findOne(sessionId);
   }
 
@@ -31,8 +31,8 @@ export class GeneralResolver {
    */
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
-  @Mutation(() => GeneralEntity)
-  generalUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: GeneralUpsertInput) {
+  @Mutation(() => ArchiveEntity)
+  archiveUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: ArchiveUpsertInput) {
     return this.svc.upsert(sessionId, body);    
   }
   
@@ -44,7 +44,7 @@ export class GeneralResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => Boolean)
-  generalDelete(@Args('sessionId') sessionId: string) {
+  archiveDelete(@Args('sessionId') sessionId: string) {
     return this.svc.remove(sessionId);
   }
 }

@@ -2,21 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AiEntity {
-  created_at: DateTime
-  session_id: String!
-  updated_at: DateTime
-  user_id: String!
-}
-
-input AiUpsertInput {
-  created_at: String
-  room_name: String!
-  session_id: String!
-  updated_at: String
-  user_id: String!
-}
-
 type AuthUser {
   roles: [String!]!
   userId: String!
@@ -49,6 +34,21 @@ input CommonCodeUpsertInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type GeneralEntity {
+  created_at: DateTime
+  session_id: String!
+  updated_at: DateTime
+  user_id: String!
+}
+
+input GeneralUpsertInput {
+  created_at: String
+  room_name: String!
+  session_id: String!
+  updated_at: String
+  user_id: String!
+}
 
 type LoginResponse {
   accessToken: String!
@@ -102,11 +102,11 @@ type MenuEntity {
 }
 
 type Mutation {
-  aiDelete(sessionId: String!): Boolean!
-  aiUpsert(roomName: AiUpsertInput!, sessionId: String!): AiEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
+  generalDelete(sessionId: String!): Boolean!
+  generalUpsert(roomName: GeneralUpsertInput!, sessionId: String!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
@@ -115,11 +115,11 @@ type Mutation {
 }
 
 type Query {
-  ai(sessionId: String!): AiEntity!
-  aiList: [AiEntity!]!
+  aiList: [GeneralEntity!]!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
+  general(sessionId: String!): GeneralEntity!
   member(userId: String!): MemberEntity
   memberList(input: MemberSearchInput): [MemberEntity!]!
   menuList: [MenuEntity!]!
