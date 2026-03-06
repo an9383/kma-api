@@ -10,7 +10,7 @@ import {
 //import { StatusDto } from './status.dto';
 import { lowerCaseTransformer } from './lower-case.transformer';
 
-export class CreateAiDto {
+export class CreateGeneralDto {
   @ApiPropertyOptional({ example: '1', type: String })
   @Transform(lowerCaseTransformer)
   sessionId?: string | null;

@@ -18,7 +18,7 @@ import { HwpModule } from './modules/hwp/hwp.module';
 import { DbQueryLogPatch } from './common/logging/db-query-log-patch';
 import { SystemModule } from './modules/system/system.module';
 import { UserModule } from './modules/user/user.module';
-import { AiModule } from './modules/ai/ai.module';
+import { GeneralModule } from './modules/general-chat/general.module';
 
 @Module({
   imports: [
@@ -47,7 +47,7 @@ import { AiModule } from './modules/ai/ai.module';
         csrfPrevention: false,
       }),
     }),
-    AiModule,
+    GeneralModule,
     HealthModule,
     AuthModule,
     MemberModule,

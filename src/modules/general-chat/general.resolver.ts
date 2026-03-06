@@ -1,27 +1,27 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards, Logger, } from '@nestjs/common';
-import { AiEntity } from './entities/ai.entity';
-import { AiService } from './ai.service';
-import { AiUpsertInput, AiSearchListInput } from './dto/ai.input';
+import { GeneralEntity } from './entities/general.entity';
+import { GeneralService } from './general.service';
+import { GeneralUpsertInput, GeneralSearchListInput } from './dto/general.input';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { UpdateAiDto } from './dto/update-ai.dto';
+import { UpdateAiDto } from './dto/update-general.dto';
 
 /**
  * 회원 도메인의 데이터 조작 및 조회를 담당하는 인터페이스 레이어입니다
  */
-@Resolver(() => AiEntity)
-export class AiResolver {
-  constructor(private svc: AiService) {}
+@Resolver(() => GeneralEntity)
+export class GeneralResolver {
+  constructor(private svc: GeneralService) {}
 
-  @Query(() => [AiEntity])
+  @Query(() => [GeneralEntity])
   async aiList() {
     return this.svc.list();
   }
 
-  @Query(() => AiEntity)
-  ai(@Args('sessionId') sessionId: string) {
+  @Query(() => GeneralEntity)
+  general(@Args('sessionId') sessionId: string) {
     return this.svc.findOne(sessionId);
   }
 
@@ -31,8 +31,8 @@ export class AiResolver {
    */
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
-  @Mutation(() => AiEntity)
-  aiUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: AiUpsertInput) {
+  @Mutation(() => GeneralEntity)
+  generalUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: GeneralUpsertInput) {
     return this.svc.upsert(sessionId, body);    
   }
   
@@ -44,7 +44,7 @@ export class AiResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => Boolean)
-  aiDelete(@Args('sessionId') sessionId: string) {
+  generalDelete(@Args('sessionId') sessionId: string) {
     return this.svc.remove(sessionId);
   }
 }

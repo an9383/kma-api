@@ -1,16 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AiEntity } from './entities/ai.entity';
-import { AiSearchListInput } from './dto/ai.input';
-import { AiUpsertInput } from './dto/ai.input';
-import { UpdateAiDto } from './dto/update-ai.dto';
+import { GeneralEntity } from './entities/general.entity';
+import { GeneralSearchListInput } from './dto/general.input';
+import { GeneralUpsertInput } from './dto/general.input';
+import { UpdateAiDto } from './dto/update-general.dto';
 
 
 @Injectable()
-export class AiService {
-  private readonly log = new Logger(AiService.name);
-  constructor(@InjectRepository(AiEntity) private repo: Repository<AiEntity>) {}
+export class GeneralService {
+  private readonly log = new Logger(GeneralService.name);
+  constructor(@InjectRepository(GeneralEntity) private repo: Repository<GeneralEntity>) {}
 
   ping() {
     return { ok: true, now: new Date().toISOString() };
@@ -31,12 +31,12 @@ export class AiService {
   
 
   /** 단건 조회 (myProfile 및 상세 조회 공용) */
-  async findOne(session_id: string): Promise<AiEntity | null> {
+  async findOne(session_id: string): Promise<GeneralEntity | null> {
     return this.repo.findOne({ where: { session_id } });
   }
 
     /** 채팅방 수정 및 저장 */
-  async upsert(sessionId: AiUpsertInput['session_id'], body: AiUpsertInput): Promise<AiEntity> {
+  async upsert(sessionId: GeneralUpsertInput['session_id'], body: GeneralUpsertInput): Promise<GeneralEntity> {
     this.log.log({ sessionId, body });
     const existing = await this.repo.findOne({ where: { session_id: sessionId } });
     if (existing) {

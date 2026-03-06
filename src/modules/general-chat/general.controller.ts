@@ -1,16 +1,16 @@
 import { Controller, Req, Get, Post, Put, Patch, Delete, Body, Query, Param, Logger, HttpStatus, HttpCode} from '@nestjs/common';
 import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
-import { AiService } from './ai.service';
-import { AiEntity } from './entities/ai.entity';
-import { AiSearchListInput, AiUpsertInput } from './dto/ai.input';
-import { UpdateAiDto } from './dto/update-ai.dto';
-import { AiResolver } from './ai.resolver';
+import { GeneralService } from './general.service';
+import { GeneralEntity } from './entities/general.entity';
+import { GeneralSearchListInput, GeneralUpsertInput } from './dto/general.input';
+import { UpdateAiDto } from './dto/update-general.dto';
+import { GeneralResolver } from './general.resolver';
 
 @ApiTags('api/ai')
 @Controller('api/ai')
-export class AiController {
-  private readonly logger = new Logger(AiController.name);
-  constructor(private readonly aiResolver: AiResolver, private readonly aiService: AiService) {}
+export class GeneralController {
+  private readonly logger = new Logger(GeneralController.name);
+  constructor(private readonly generalResolver: GeneralResolver, private readonly generalService: GeneralService) {}
 
   // @Get()
   // ping() {
@@ -26,14 +26,14 @@ export class AiController {
   // 목록조회
   @Get()
   async list() {
-    const items = await this.aiResolver.aiList();
+    const items = await this.generalResolver.aiList();
     return { items };
   }
 
    // sessionId로 단건 조회
   @Get(':sessionId')
   async findOne(@Param('sessionId') sessionId: string) {
-    const items = await this.aiResolver.ai(sessionId);
+    const items = await this.generalResolver.general(sessionId);
     return { items };
   }
 
@@ -41,11 +41,11 @@ export class AiController {
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'sessionId', type: String, required: true})
   async update(
-    @Param('sessionId') sessionId: AiEntity['session_id'],
-    @Body() dto: UpdateAiDto): Promise<AiEntity> {
+    @Param('sessionId') sessionId: GeneralEntity['session_id'],
+    @Body() dto: UpdateAiDto): Promise<GeneralEntity> {
     const { room, user_id } = dto;
     this.logger.log({ sessionId, room, user_id });
-    return this.aiResolver.aiUpsert(sessionId, {
+    return this.generalResolver.generalUpsert(sessionId, {
       session_id: sessionId,
       room_name: room,
       user_id: user_id,
@@ -58,7 +58,7 @@ export class AiController {
   async delete(
     @Param('sessionId') sessionId: string) {
     this.logger.log({ sessionId});
-    const items = await this.aiResolver.aiDelete(sessionId);
+    const items = await this.generalResolver.generalDelete(sessionId);
     return { items };
   }
 }

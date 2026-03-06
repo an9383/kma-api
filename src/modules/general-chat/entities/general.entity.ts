@@ -3,7 +3,7 @@ import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } fro
 
 @ObjectType()
 @Entity({ name: 'chat_rooms' }) // 사용자 마스터 정보
-export class AiEntity {
+export class GeneralEntity {
   @Field()
   @PrimaryColumn({ name: 'session_id', type: 'varchar', length: 50 })
   session_id!: string; // 세션 ID
