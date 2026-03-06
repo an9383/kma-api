@@ -1,0 +1,148 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AiEntity {
+  created_at: DateTime
+  session_id: String!
+  updated_at: DateTime
+  user_id: String!
+}
+
+input AiUpsertInput {
+  created_at: String
+  room_name: String!
+  session_id: String!
+  updated_at: String
+  user_id: String!
+}
+
+type AuthUser {
+  roles: [String!]!
+  userId: String!
+  userName: String!
+}
+
+type CommonCodeEntity {
+  comnCd: String!
+  comnDiv: String
+  comnNm: String!
+  modDt: DateTime
+  modId: String
+  regDt: DateTime
+  regId: String
+  sort: Int!
+  upCd: String
+}
+
+input CommonCodeUpsertInput {
+  comnCd: String!
+  comnDiv: String
+  comnNm: String!
+  modId: String
+  regId: String
+  sort: Int
+  upCd: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type LoginResponse {
+  accessToken: String!
+  user: AuthUser!
+}
+
+type MemberEntity {
+  age: Int
+  areaDiv: String
+  boardDiv: String
+  content: String
+  fileGrpId: String
+  joinDate: DateTime
+  modDt: DateTime
+  modId: String
+  payDiv: String
+  regDt: DateTime
+  regId: String
+  userId: String!
+  userName: String!
+}
+
+input MemberSearchInput {
+  areaDiv: String
+  boardDiv: String
+  endDate: String
+  keyword: String
+  payDiv: String
+  startDate: String
+}
+
+input MemberUpsertInput {
+  age: Int
+  content: String
+  fileGrpId: String
+  userId: String!
+  userName: String!
+}
+
+type MenuEntity {
+  children: [MenuEntity!]
+  id: String!
+  label: String!
+  menuId: String!
+  menuNm: String!
+  path: String
+  regDt: DateTime
+  sort: Int!
+  upId: String
+  useYn: String!
+}
+
+type Mutation {
+  aiDelete(sessionId: String!): Boolean!
+  aiUpsert(roomName: AiUpsertInput!, sessionId: String!): AiEntity!
+  comnBatchDelete(ids: [String!]!): Boolean!
+  comnDelete(comnCd: String!): Boolean!
+  comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
+  login(id: String!, pw: String!): LoginResponse!
+  memberDelete(userId: String!): Boolean!
+  memberUpsert(input: MemberUpsertInput!): MemberEntity!
+  userDelete(id: String!): Boolean!
+  userUpsert(input: UserUpsertInput!): UserEntity!
+}
+
+type Query {
+  ai(sessionId: String!): AiEntity!
+  aiList: [AiEntity!]!
+  commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
+  comnDetailList(upCd: String!): [CommonCodeEntity!]!
+  comnMasterList: [CommonCodeEntity!]!
+  member(userId: String!): MemberEntity
+  memberList(input: MemberSearchInput): [MemberEntity!]!
+  menuList: [MenuEntity!]!
+  myProfile: UserEntity
+  user(id: String!): UserEntity
+  userList(dept: String, keyword: String): [UserEntity!]!
+}
+
+type UserEntity {
+  dept: String
+  id: String!
+  mod_dt: DateTime
+  mod_id: String
+  name: String!
+  reg_dt: DateTime
+  reg_id: String
+  telno: String
+}
+
+input UserUpsertInput {
+  dept: String
+  id: String!
+  name: String!
+  pswd: String
+  telno: String
+}
