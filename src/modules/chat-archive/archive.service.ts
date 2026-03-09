@@ -2,7 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ArchiveEntity } from './entities/archive.entity';
-import { ArchiveSearchListInput } from './dto/archive.input';
 import { ArchiveUpsertInput } from './dto/archive.input';
 import { UpdateArchiveDto } from './dto/update-archive.dto';
 
@@ -24,7 +23,6 @@ export class ArchiveService {
       // }
       return await qb.getMany();
     }
-  
 
   /** 단건 조회 (myProfile 및 상세 조회 공용) */
   async findOne(archive_id: string): Promise<ArchiveEntity | null> {
@@ -61,8 +59,8 @@ export class ArchiveService {
   }
   
   /** 삭제 */
-  async remove(id: string): Promise<boolean> {
-    const result = await this.repo.delete(id);
+  async remove(archiveId: string): Promise<boolean> {
+    const result = await this.repo.delete(archiveId);
     return result.affected ? result.affected > 0 : false;
   }
 
