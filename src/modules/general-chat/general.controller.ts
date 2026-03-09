@@ -12,17 +12,6 @@ export class GeneralController {
   private readonly logger = new Logger(GeneralController.name);
   constructor(private readonly generalResolver: GeneralResolver, private readonly generalService: GeneralService) {}
 
-  // @Get()
-  // ping() {
-  //   return { ok: true, now: new Date().toISOString() };
-  // }
-
-  // @Get()
-  // async convert() {
-  //   const html = await this.aiService.ping();
-  //   return { ok: true, html };
-  // }
-
   // 목록조회
   @Get()
   async list() {

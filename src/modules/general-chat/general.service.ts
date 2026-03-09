@@ -12,10 +12,6 @@ export class GeneralService {
   private readonly log = new Logger(GeneralService.name);
   constructor(@InjectRepository(GeneralEntity) private repo: Repository<GeneralEntity>) {}
 
-  ping() {
-    return { ok: true, now: new Date().toISOString() };
-  }
-
   /** 목록 조회 */
   async list() {
     const qb = this.repo.createQueryBuilder('m');
