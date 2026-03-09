@@ -50,6 +50,7 @@ export class AuthService {
     // sub: 토큰 식별자(ID), username: 사용자 명칭
     //const payload = { sub: user.id, username: user.name, useremail: user.email };
     const payload = { sub: user.id, useremail: user.email };
+    console.log(payload);
 
     // 발행된 토큰과 프론트엔드 전역 상태 관리를 위한 최소한의 프로필 정보를 반환합니다.
     return {
@@ -60,7 +61,7 @@ export class AuthService {
         userEmail: user.email,
         // 권한 설계: admin 계정 여부에 따른 동적 역할 할당
         //roles: user.id === 'admin' ? ['ADMIN'] : ['USER'],
-        roles: user.role === '1' ? ['ADMIN'] : ['USER'],
+        roles: user.role == '1' ? ['ADMIN'] : ['USER'],
       },
     };
   }
@@ -83,7 +84,7 @@ export class AuthService {
         audience: 'kma-iam',
         expiresIn: '5m',
         header: {
-          jwks_url: 'https://[kma-portal-domain url]/api/v1/auth/jwks.json',
+          jwks_url: 'https://[kma-portal-domain url]/api/v1/auth/jwks.json',  //jwks_url주소입력
           kid: 'ai-portal-key-1'
         } as any 
       };
@@ -93,7 +94,7 @@ export class AuthService {
       console.log(assertion);
 
       // 3. Athena API 호출 (exchange-token)
-      const athenaApiUrl = 'http://IAM_SERVER_URL/api/v1/auth/sso/exchange-token';
+      const athenaApiUrl = 'http://IAM_SERVER_URL/api/v1/auth/sso/exchange-token';  //jwks_url주소입력
       const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
 
       const response = await firstValueFrom(
