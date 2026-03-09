@@ -33,12 +33,10 @@ export class AuthService {
 
     // 1단계: 데이터베이스 마스터 테이블(kma_usr_m)에서 사용자 식별 정보 조회
     const user = await this.userService.findOne(id);
-    console.log(user);
 
     // 데이터 정합성 보장을 위해 DB 저장값과 입력값의 공백 제거 후 비교 수행
     // 향후 단방향 해시 암호화 적용 시 해당 구간 로직 고도화 필요
-    //const dbPswd = (user as any)?.pswd?.toString().trim();
-    let dbPswd = 's9200502'
+    const dbPswd = (user as any)?.pswd?.toString().trim();
     const inputPw = pw?.toString().trim();
 
     // 사용자가 존재하지 않거나 비밀번호가 일치하지 않을 경우 통합 에러 반환 (보안성 강화)
@@ -52,7 +50,6 @@ export class AuthService {
     // sub: 토큰 식별자(ID), username: 사용자 명칭
     //const payload = { sub: user.id, username: user.name, useremail: user.email };
     const payload = { sub: user.id, useremail: user.email };
-    console.log(user);
 
     // 발행된 토큰과 프론트엔드 전역 상태 관리를 위한 최소한의 프로필 정보를 반환합니다.
     return {
@@ -62,7 +59,8 @@ export class AuthService {
         //userName: user.name,
         userEmail: user.email,
         // 권한 설계: admin 계정 여부에 따른 동적 역할 할당
-        roles: user.id === 'admin' ? ['ADMIN'] : ['USER'],
+        //roles: user.id === 'admin' ? ['ADMIN'] : ['USER'],
+        roles: user.role === '1' ? ['ADMIN'] : ['USER'],
       },
     };
   }

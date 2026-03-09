@@ -22,12 +22,14 @@ export class UserEntity {
 
   // DB에 저장된 비밀번호 해시값 (보안상 GraphQL 필드는 제외), 검증용으로만 사용
   @Column({ name: 'password', type: 'varchar', length: 255, nullable: true })
-  pw!: string;
-  //pswd!: string;
+  pswd!: string;
 
   // DB에 저장된 비밀번호 해시값 (보안상 GraphQL 필드는 제외), 검증용으로만 사용
   @Column({ name: 'email', type: 'varchar', length: 255, nullable: true })
   email!: string;
+
+  @Column({ name: 'role_id', type: 'varchar', length: 255, nullable: true })
+  role!: string;
 
   // @Field({ nullable: true })
   // @Column({ name: 'reg_id', type: 'varchar', length: 50, nullable: true })
