@@ -136,6 +136,7 @@ type Mutation {
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
+  requestAthenaToken(email: String!): LoginResponse!
   userDelete(id: String!): Boolean!
   userUpsert(input: UserUpsertInput!): UserEntity!
 }
@@ -157,14 +158,7 @@ type Query {
 }
 
 type UserEntity {
-  dept: String
   id: String!
-  mod_dt: DateTime
-  mod_id: String
-  name: String!
-  reg_dt: DateTime
-  reg_id: String
-  telno: String
 }
 
 input UserUpsertInput {

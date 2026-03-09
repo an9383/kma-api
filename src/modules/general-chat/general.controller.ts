@@ -3,7 +3,7 @@ import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { GeneralService } from './general.service';
 import { GeneralEntity } from './entities/general.entity';
 import { GeneralSearchListInput, GeneralUpsertInput } from './dto/general.input';
-import { UpdateAiDto } from './dto/update-general.dto';
+import { UpdateGeneralDto } from './dto/update-general.dto';
 import { GeneralResolver } from './general.resolver';
 
 @ApiTags('api/general')
@@ -42,7 +42,7 @@ export class GeneralController {
   @ApiParam({ name: 'sessionId', type: String, required: true})
   async update(
     @Param('sessionId') sessionId: GeneralEntity['session_id'],
-    @Body() dto: UpdateAiDto): Promise<GeneralEntity> {
+    @Body() dto: UpdateGeneralDto): Promise<GeneralEntity> {
     const { room, user_id } = dto;
     this.logger.log({ sessionId, room, user_id });
     return this.generalResolver.generalUpsert(sessionId, {

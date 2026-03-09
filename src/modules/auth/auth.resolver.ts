@@ -21,4 +21,9 @@ export class AuthResolver {
   login(@Args('id') id: string, @Args('pw') pw: string) {
     return this.auth.login(id, pw);
   }
+
+  @Mutation(() => LoginResponse)
+  requestAthenaToken(@Args('email') email: string) {
+    return this.auth.requestAthenaToken(email);
+  }
 }

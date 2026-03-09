@@ -2,7 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { UseGuards, Logger, } from '@nestjs/common';
 import { ArchiveEntity } from './entities/archive.entity';
 import { ArchiveService } from './archive.service';
-import { ArchiveUpsertInput, ArchiveSearchListInput } from './dto/archive.input';
+import { ArchiveUpsertInput } from './dto/archive.input';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';

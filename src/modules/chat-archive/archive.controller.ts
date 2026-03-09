@@ -12,17 +12,6 @@ export class ArchiveController {
   private readonly logger = new Logger(ArchiveController.name);
   constructor(private readonly archiveResolver: ArchiveResolver, private readonly archiveService: ArchiveService) {}
 
-  // @Get()
-  // ping() {
-  //   return { ok: true, now: new Date().toISOString() };
-  // }
-
-  // @Get()
-  // async convert() {
-  //   const html = await this.aiService.ping();
-  //   return { ok: true, html };
-  // }
-
   // 목록조회
   @Get()
   async list() {
