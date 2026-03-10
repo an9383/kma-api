@@ -42,7 +42,6 @@ export class AuthController implements OnModuleInit {
 
     const loginResult = await this.authResolver.login(id, pw);
     const email = loginResult.user.userEmail;
-    this.logger.log(email);
 
     return this.authResolver.requestAthenaToken(email);
   }

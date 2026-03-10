@@ -76,7 +76,6 @@ export class AuthService {
       const payload = {
         email: userEmail,
       };
-      console.log(payload);
 
       const signOptions: jwt.SignOptions = {
         algorithm: 'RS256',
@@ -88,7 +87,6 @@ export class AuthService {
           kid: 'ai-portal-key-1'
         } as any 
       };
-      console.log(signOptions)
 
       const assertion = jwt.sign(payload, privateKeyPem, signOptions);
       console.log(assertion);
