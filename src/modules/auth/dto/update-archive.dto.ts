@@ -1,11 +1,8 @@
-import { Transform, Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { lowerCaseTransformer } from './lower-case.transformer';
 
-export class UpdateArchiveDto {
+export class UpdateDto {
   @ApiPropertyOptional({ example: '1', type: String, description: 'App id'})
-  @Transform(lowerCaseTransformer)
   @IsString()
   app_id!: string;
 

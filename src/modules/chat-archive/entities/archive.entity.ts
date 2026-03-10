@@ -2,10 +2,10 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @ObjectType()
-@Entity({ name: 'archives' }) // 사용자 마스터 정보
+@Entity({ name: 'archives' }) // 테이블정보
 export class ArchiveEntity {
   @Field()
-  @PrimaryColumn({ name: 'archive_id', type: 'varchar', length: 50 })
+  @PrimaryColumn({ name: 'archive_id', type: 'varchar', length: 100 })
   archive_id!: string; // 세션 ID
 
   @Field()
