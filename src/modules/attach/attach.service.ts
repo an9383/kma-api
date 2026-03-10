@@ -21,9 +21,9 @@ export class AttachService {
   ) {}
 
   // 컨트롤러에서 remove()를 호출하는 이름과의 하위호환
-  async remove(fileGrpId: string, fileId: string) {
-    return this.delete(fileGrpId, fileId);
-  }
+  // async remove(fileGrpId: string, fileId: string) {
+  //   return this.delete(fileGrpId, fileId);
+  // }
 
   async list(fileGrpId: string) {
     if (!fileGrpId || !String(fileGrpId).trim()) {

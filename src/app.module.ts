@@ -20,6 +20,7 @@ import { SystemModule } from './modules/system/system.module';
 import { UserModule } from './modules/user/user.module';
 import { GeneralModule } from './modules/general-chat/general.module';
 import { ArchiveModule } from './modules/chat-archive/archive.module';
+import { FilesModule } from './modules/files/files.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ArchiveModule } from './modules/chat-archive/archive.module';
     }),
     GeneralModule,
     ArchiveModule,
+    FilesModule,
     HealthModule,
     AuthModule,
     MemberModule,
