@@ -26,15 +26,18 @@ export class FilesService {
     }
 
     const items = await this.fileRepository.find({
-      where: { fileId: In(fileList), fileUseYn: 'Y' },
-      order: { regDt: 'ASC' },
+      where: { fileNm: In(fileList), fileUseYn: 'Y' },
+      order: { regDt: 'DESC' },
+      take: fileList.length,
     });
+    console.log(items);
     
     // 프론트에서는 AttachDto[] 형태를 기대
     return items.map((x) => ({
       fileGrpId: x.fileGrpId,
       fileId: x.fileId,
       fileNm: x.fileNm,
+      saveFileNm: x.saveFileNm,
       fileSize: x.fileSize,
     }));
   }
@@ -57,7 +60,7 @@ export class FilesService {
       for (const f of files) {
         const orig = f.__origName ?? f.originalname;
         const save = f.__saveName ?? path.basename(f.path);
-        const fileId = f.__fileId ?? path.parse(save).name;
+        //const fileId = f.__fileId ?? path.parse(save).name;
         const grp = f.__grpId ?? fileGrpId;
         if (!grp) {
           // 이 케이스는 정상적으로는 발생하지 않아야 하지만,
@@ -71,7 +74,7 @@ export class FilesService {
         rows.push(
           this.fileRepository.create({
             fileGrpId: grp,
-            fileId,
+            //fileId,
             fileNm: orig,
             saveFileNm: save,
             filePath: relDir,
@@ -105,8 +108,10 @@ export class FilesService {
         fileGrpId: finalGrpId,
         items: rows.map((r) => ({
           fileGrpId: r.fileGrpId,
-          fileId: r.fileId,
+          //fileId: r.fileId,
           fileNm: r.fileNm,
+          saveFileNm: r.saveFileNm,
+          filePath: r.filePath,
           fileSize: r.fileSize,
         })),
       };

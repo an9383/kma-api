@@ -1,11 +1,12 @@
-import { BadRequestException, Body, Controller, Delete, Get, Headers, Param, Post, Res, UploadedFiles, UseInterceptors, Logger } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Headers, Param, Post, Res, UploadedFiles, UseInterceptors, Logger , InternalServerErrorException} from '@nestjs/common';
 import { Response } from 'express';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import * as fs from 'fs';
 import * as path from 'path';
-import { randomUUID } from 'crypto';
+//import { randomUUID } from 'crypto';
 import { FilesService } from './files.service';
+import archiver from 'archiver';
 
 function ensureDir(dir: string) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
@@ -34,8 +35,52 @@ export class FilesController {
    * fileList로 파일 목록 조회
    */
   @Post()
-  async list(@Body('fileList') fileList: string[]) { 
+  async list(@Body('fileList') fileList: string[], @Res() res: Response) { 
     const items = await this.filesService.list(fileList);
+      try {
+      res.set({
+        'Content-Type': 'application/zip',
+        'Content-Disposition': 'attachment; filename="my-download-files.zip"',
+      });
+
+      const archive = archiver('zip', {
+        zlib: { level: 9 }, 
+      });
+
+      archive.on('error', (err) => {
+        throw new InternalServerErrorException('ZIP 압축 중 오류가 발생했습니다.', err.message);
+      });
+      archive.pipe(res);
+      
+      for (const item of items) {
+        console.log(item.saveFileNm);
+        console.log(item.fileNm);
+        const actualFilePath = path.join(
+          process.cwd(), 
+          'uploads', 
+          item.fileGrpId, 
+          (item as any).saveFileNm // 서비스 반환값에 맞게 속성명 변경 필요
+        ); 
+        console.log(actualFilePath);
+
+        // 파일이 디스크에 존재하는지 검사 후 추가
+        if (fs.existsSync(actualFilePath)) {
+          archive.file(actualFilePath, { name: item.fileNm as string });
+        } else {
+          this.logger.warn(`파일을 찾을 수 없어 압축에서 제외됨: ${actualFilePath}`);
+        }
+      }
+
+      // 4. 파일 추가가 끝났음을 알림 (이후 스트림이 종료되고 다운로드가 완료됨)
+      await archive.finalize();
+
+    } catch (error) {
+      console.error('ZIP 다운로드 에러:', error);
+      // 이미 헤더가 전송된 후에는 일반적인 예외 처리가 먹히지 않을 수 있으므로
+      if (!res.headersSent) {
+        res.status(500).json({ message: '다운로드 처리 중 오류가 발생했습니다.' });
+      }
+    }
     return { items };
   }
 
@@ -81,17 +126,39 @@ export class FilesController {
           //const ext = path.extname(orig);
           //const fileId = orig;
           
-          // 1. 확장자 먼저 추출 (예: '.hwp')
+          // 1. 확장자 및 파일명 추출
           const ext = path.extname(orig); 
+
           // 2. 전체 파일명에서 확장자 부분만 쏙 빼고 추출 (예: 'test')
           const fileId = path.basename(orig, ext);
-          console.log(ext);
-          console.log(fileId);
+
+          // destination에서 넘겨준 저장 경로 가져오기
+          const reqAny = req as any;
+          const body = (reqAny.body ??= {});
+          const headerGrp = (reqAny.headers?.['x-file-grp-id'] as string) || '';
+          const fromHeader = typeof headerGrp === 'string' ? headerGrp.trim() : '';
+          
+          const now = new Date();
+          const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+          
+          const fileGrpId = (body.fileGrpId || fromHeader || dateString).trim();
+          const dir = path.join(process.cwd(), 'uploads', fileGrpId);
+
+          let saveName = orig;
+          let counter = 1;
+
+          // ✅ 중복 파일명 체크 및 Rename 로직 (test.hwp -> test (1).hwp)
+          while (fs.existsSync(path.join(dir, saveName))) {
+            saveName = `${fileId} (${counter})${ext}`;
+            counter++;
+          }
 
           // multer file 객체에 메타 저장(서비스에서 사용)
-          (file as any).__fileId = fileId;
-          (file as any).__origName = orig;
-          cb(null, `${fileId}${ext}`);
+          (file as any).__origName = orig;                // DB에 보여질 원본 이름 (test.hwp)
+          (file as any).__saveName = saveName;            // 실제 저장된 이름 (test (1).hwp)
+          (file as any).__fileId = path.basename(saveName, ext);
+
+          cb(null, saveName);
         },
       }),
       limits: { fileSize: 50 * 1024 * 1024 }, // 50MB

@@ -136,7 +136,8 @@ type Mutation {
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
-  requestAthenaToken(email: String!): LoginResponse!
+  requestAthenaAccessToken(email: String!, pw: String!): LoginResponse!
+  requestAthenaRefreshToken(refreshToken: String!): LoginResponse!
   userDelete(id: String!): Boolean!
   userUpsert(input: UserUpsertInput!): UserEntity!
 }

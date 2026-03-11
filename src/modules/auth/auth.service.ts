@@ -66,7 +66,7 @@ export class AuthService {
     };
   }
 
-  async requestAthenaToken(userEmail: string) {
+  async requestAthenaAccessToken(userEmail: string, pw: string) {
     try {
       // 1. Private Key 불러오기
       const privateKeyPem = fs.readFileSync('private_key.pem', 'utf8');
@@ -81,24 +81,76 @@ export class AuthService {
         algorithm: 'RS256',
         issuer: 'kma-portal',
         audience: 'kma-iam',
-        expiresIn: '5m',
+        expiresIn: '240m',
         header: {
-          jwks_url: 'https://[kma-portal-domain url]/api/v1/auth/jwks.json',  //jwks_url주소입력
+          jwks_url: 'https://kma-athena.dev.uracle.co.kr/api/v1/auth/jwks.json',  //jwks_url주소입력
           kid: 'ai-portal-key-1'
-        } as any 
+        } as any,
       };
 
       const assertion = jwt.sign(payload, privateKeyPem, signOptions);
       console.log(assertion);
 
       // 3. Athena API 호출 (exchange-token)
-      const athenaApiUrl = 'http://IAM_SERVER_URL/api/v1/auth/sso/exchange-token';  //jwks_url주소입력
-      const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
+      //const athenaApiUrl = 'http://IAM_SERVER_URL/api/v1/auth/sso/exchange-token';  //jwks_url주소입력
+      //const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
+
+      const athenaApiUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/auth/token/direct';  //jwks_url주소입력
+      //const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
+
+      // const response = await firstValueFrom(
+      //   this.httpService.post(athenaApiUrl, {
+      //     assertion: assertion,
+      //     return_to: returnToUrl,
+      //   })
+      // );
+      const response = await firstValueFrom(
+        this.httpService.post(athenaApiUrl, {
+          "email": payload.email,
+          "password": pw
+        })
+      );
+      console.log(response);
+
+      // 4. 발급받은 데이터(Athena 세션/토큰 정보) 반환
+      return response.data;
+
+    } catch (error) {
+      console.error('Athena 토큰 발급 실패:', error);
+      throw new InternalServerErrorException('SSO 인증 연동 중 오류가 발생했습니다.');
+    }
+  }
+
+    async requestAthenaRefreshToken(refreshToken: string) {
+    try {
+      // // 1. Private Key 불러오기
+      // const privateKeyPem = fs.readFileSync('private_key.pem', 'utf8');
+      // console.log(privateKeyPem);
+
+      // const signOptions: jwt.SignOptions = {
+      //   algorithm: 'RS256',
+      //   issuer: 'kma-portal',
+      //   audience: 'kma-iam',
+      //   expiresIn: '240m',
+      //   header: {
+      //     jwks_url: 'https://kma-athena.dev.uracle.co.kr/api/v1/auth/jwks.json',  //jwks_url주소입력
+      //     kid: 'ai-portal-key-1'
+      //   } as any,
+      // };
+
+      // const assertion = jwt.sign(payload, privateKeyPem, signOptions);
+      // console.log(assertion);
+
+      // 3. Athena API 호출 (exchange-token)
+      //const athenaApiUrl = 'http://IAM_SERVER_URL/api/v1/auth/sso/exchange-token';  //jwks_url주소입력
+      //const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
+
+      const athenaApiUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/auth/token/refresh';  //jwks_url주소입력
+      //const returnToUrl = 'https://athena.kubagents-dev.koreacb.com/Dashboard';
 
       const response = await firstValueFrom(
         this.httpService.post(athenaApiUrl, {
-          assertion: assertion,
-          return_to: returnToUrl,
+          "refresh_token": refreshToken,
         })
       );
       console.log(response);

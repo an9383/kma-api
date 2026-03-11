@@ -35,15 +35,23 @@ export class AuthController implements OnModuleInit {
       return this.authResolver.login(id, pw);
   }
 
-  @Post('/athena-token')
+  @Post('/token')
   @HttpCode(HttpStatus.OK)
-  async requestAthenaToken(@Body('id') id: string, @Body('pw') pw: string) {
+  async requestAthenaAccessToken(@Body('id') id: string, @Body('pw') pw: string) {
     this.logger.log({ id, pw });
 
     const loginResult = await this.authResolver.login(id, pw);
     const email = loginResult.user.userEmail;
 
-    return this.authResolver.requestAthenaToken(email);
+    return this.authResolver.requestAthenaAccessToken(email, pw);
+  }
+
+  @Post('/refresh')
+  @HttpCode(HttpStatus.OK)
+  async requestAthenaRefreshToken(@Body('refresh_token') refreshToken: string) {
+    this.logger.log({ refreshToken });
+
+    return this.authResolver.requestAthenaRefreshToken(refreshToken);
   }
 
   @Get('.well-known/jwks.json')

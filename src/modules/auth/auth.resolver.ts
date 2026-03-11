@@ -23,7 +23,12 @@ export class AuthResolver {
   }
 
   @Mutation(() => LoginResponse)
-  requestAthenaToken(@Args('email') email: string) {
-    return this.auth.requestAthenaToken(email);
+  requestAthenaAccessToken(@Args('email') email: string, @Args('pw') pw: string) {
+    return this.auth.requestAthenaAccessToken(email, pw);
+  }
+
+  @Mutation(() => LoginResponse)
+  requestAthenaRefreshToken(@Args('refreshToken') refreshToken: string) {
+    return this.auth.requestAthenaRefreshToken(refreshToken);
   }
 }
