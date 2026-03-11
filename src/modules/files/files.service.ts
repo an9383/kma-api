@@ -73,7 +73,7 @@ export class FilesService {
   
         rows.push(
           this.fileRepository.create({
-            fileGrpId: grp,
+            //fileGrpId: grp,
             //fileId,
             fileNm: orig,
             saveFileNm: save,

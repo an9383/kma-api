@@ -112,9 +112,9 @@ export class FilesController {
           //const fileGrpId = (body.fileGrpId || fromHeader || randomUUID()).trim();
           const fileGrpId = (body.fileGrpId || fromHeader || dateString).trim();
           
-          console.log(fileGrpId);
+        console.log(fileGrpId);
           body.fileGrpId = fileGrpId; // 컨트롤러의 @Body()로도 전달되도록 유지
-          const dest = path.join(process.cwd(), 'uploads', fileGrpId);
+          const dest = path.join(process.cwd(), 'uploads');
           ensureDir(dest);
           cb(null, dest);
         },
@@ -142,7 +142,7 @@ export class FilesController {
           const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
           
           const fileGrpId = (body.fileGrpId || fromHeader || dateString).trim();
-          const dir = path.join(process.cwd(), 'uploads', fileGrpId);
+          const dir = path.join(process.cwd(), 'uploads');
 
           let saveName = orig;
           let counter = 1;
