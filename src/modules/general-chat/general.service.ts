@@ -27,14 +27,14 @@ export class GeneralService {
   
 
   /** 단건 조회 (myProfile 및 상세 조회 공용) */
-  async findOne(session_id: string): Promise<GeneralEntity | null> {
-    return this.repo.findOne({ where: { session_id } });
+  async findOne(room_id: string): Promise<GeneralEntity | null> {
+    return this.repo.findOne({ where: { room_id } });
   }
 
     /** 채팅방 수정 및 저장 */
-  async upsert(sessionId: GeneralUpsertInput['session_id'], body: GeneralUpsertInput): Promise<GeneralEntity> {
-    this.log.log({ sessionId, body });
-    const existing = await this.repo.findOne({ where: { session_id: sessionId } });
+  async upsert(roomId: GeneralUpsertInput['room_id'], body: GeneralUpsertInput): Promise<GeneralEntity> {
+    this.log.log({ roomId, body });
+    const existing = await this.repo.findOne({ where: { room_id: roomId } });
     if (existing) {
       this.repo.merge(existing, {
         user_id: body.user_id,
@@ -45,7 +45,7 @@ export class GeneralService {
     }
 
     const newUser = this.repo.create({
-      session_id: sessionId,
+      room_id: roomId,
       room_name: body.room_name,
       user_id: body.user_id,
       created_at: new Date(),

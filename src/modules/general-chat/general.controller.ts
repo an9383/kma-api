@@ -20,34 +20,34 @@ export class GeneralController {
   }
 
    // sessionId로 단건 조회
-  @Get(':sessionId')
-  async findOne(@Param('sessionId') sessionId: string) {
-    const items = await this.generalResolver.general(sessionId);
+  @Get(':roomId')
+  async findOne(@Param('roomId') roomId: string) {
+    const items = await this.generalResolver.general(roomId);
     return { items };
   }
 
-  @Post(':sessionId')
+  @Post(':roomId')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'sessionId', type: String, required: true})
+  @ApiParam({ name: 'roomId', type: String, required: true})
   async update(
-    @Param('sessionId') sessionId: GeneralEntity['session_id'],
+    @Param('roomId') roomId: GeneralEntity['room_id'],
     @Body() dto: UpdateGeneralDto): Promise<GeneralEntity> {
     const { room, user_id } = dto;
-    this.logger.log({ sessionId, room, user_id });
-    return this.generalResolver.generalUpsert(sessionId, {
-      session_id: sessionId,
+    this.logger.log({ roomId, room, user_id });
+    return this.generalResolver.generalUpsert(roomId, {
+      room_id: roomId,
       room_name: room,
       user_id: user_id,
     });
   }
 
-  @Delete(':sessionId')
+  @Delete(':roomId')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'sessionId', type: String, required: true})
+  @ApiParam({ name: 'roomId', type: String, required: true})
   async delete(
-    @Param('sessionId') sessionId: string) {
-    this.logger.log({ sessionId});
-    const items = await this.generalResolver.generalDelete(sessionId);
+    @Param('roomId') roomId: string) {
+    this.logger.log({ roomId});
+    const items = await this.generalResolver.generalDelete(roomId);
     return { items };
   }
 }

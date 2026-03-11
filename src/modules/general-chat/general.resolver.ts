@@ -21,8 +21,8 @@ export class GeneralResolver {
   }
 
   @Query(() => GeneralEntity)
-  general(@Args('sessionId') sessionId: string) {
-    return this.svc.findOne(sessionId);
+  general(@Args('roomId') roomId: string) {
+    return this.svc.findOne(roomId);
   }
 
   /**
@@ -32,8 +32,8 @@ export class GeneralResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => GeneralEntity)
-  generalUpsert(@Args('sessionId') sessionId: string, @Args('roomName') body: GeneralUpsertInput) {
-    return this.svc.upsert(sessionId, body);    
+  generalUpsert(@Args('roomId') roomId: string, @Args('roomName') body: GeneralUpsertInput) {
+    return this.svc.upsert(roomId, body);    
   }
   
 

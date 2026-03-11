@@ -5,8 +5,8 @@ import { Column, Entity, PrimaryColumn, CreateDateColumn, UpdateDateColumn } fro
 @Entity({ name: 'chat_rooms' }) // 사용자 마스터 정보
 export class GeneralEntity {
   @Field()
-  @PrimaryColumn({ name: 'session_id', type: 'varchar', length: 50 })
-  session_id!: string; // 세션 ID
+  @PrimaryColumn({ name: 'room_id', type: 'varchar', length: 50 })
+  room_id!: string; // 세션 ID
 
   @Field()
   @Column({ name: 'user_id', type: 'varchar', length: 50 })

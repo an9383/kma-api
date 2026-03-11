@@ -61,15 +61,15 @@ scalar DateTime
 
 type GeneralEntity {
   created_at: DateTime
-  session_id: String!
+  room_id: String!
   updated_at: DateTime
   user_id: String!
 }
 
 input GeneralUpsertInput {
   created_at: String
+  room_id: String!
   room_name: String!
-  session_id: String!
   updated_at: String
   user_id: String!
 }
@@ -132,7 +132,7 @@ type Mutation {
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
   generalDelete(sessionId: String!): Boolean!
-  generalUpsert(roomName: GeneralUpsertInput!, sessionId: String!): GeneralEntity!
+  generalUpsert(roomId: String!, roomName: GeneralUpsertInput!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
@@ -149,7 +149,7 @@ type Query {
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
-  general(sessionId: String!): GeneralEntity!
+  general(roomId: String!): GeneralEntity!
   member(userId: String!): MemberEntity
   memberList(input: MemberSearchInput): [MemberEntity!]!
   menuList: [MenuEntity!]!

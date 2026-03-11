@@ -40,7 +40,7 @@ export class FilesController {
       try {
       res.set({
         'Content-Type': 'application/zip',
-        'Content-Disposition': 'attachment; filename="my-download-files.zip"',
+        'Content-Disposition': 'attachment; filename="my-download.zip"',
       });
 
       const archive = archiver('zip', {
