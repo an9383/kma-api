@@ -1,17 +1,4 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  Param,
-  Post,
-  Res,
-  UploadedFiles,
-  UseInterceptors,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Headers, Param, Post, Res, UploadedFiles, UseInterceptors, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -52,84 +39,98 @@ export class FilesController {
     return { items };
   }
 
-  // /**
-  //  * fileGrpId로 파일 목록 조회
-  //  */
-  // @Get(':fileGrpId')
-  // async list() {
-  //   const items = await this.filesService.list(fileGrpId);
-  //   return { items };
-  // }
+  /**
+   * 파일 업로드
+   * - FE는 FormData로 files(복수) + fileGrpId(옵션) 전달
+   */
+  @Post('upload')
+  @UseInterceptors(
+    FilesInterceptor('files', 20, {
+      storage: diskStorage({
+        destination: (req, _file, cb) => {
+          // multipart에서는 field(fileGrpId)보다 file이 먼저 들어올 수 있어서
+          // FE에서 X-File-Grp-Id 헤더를 함께 보내도록 강제한다.
+          const reqAny = req as any;
+          const body = (reqAny.body ??= {});
+          const headerGrp = (reqAny.headers?.['x-file-grp-id'] as string) || '';
+          const fromHeader = typeof headerGrp === 'string' ? headerGrp.trim() : '';
 
-  // /**
-  //  * 파일 업로드
-  //  * - FE는 FormData로 files(복수) + fileGrpId(옵션) 전달
-  //  */
-  // @Post('upload')
-  // @UseInterceptors(
-  //   FilesInterceptor('files', 20, {
-  //     storage: diskStorage({
-  //       destination: (req, _file, cb) => {
-  //         // ⚠ multipart에서는 field(fileGrpId)보다 file이 먼저 들어올 수 있어서
-  //         // FE에서 X-File-Grp-Id 헤더를 함께 보내도록 강제한다.
-  //         const reqAny = req as any;
-  //         const body = (reqAny.body ??= {});
-  //         const headerGrp = (reqAny.headers?.['x-file-grp-id'] as string) || '';
-  //         const fromHeader = typeof headerGrp === 'string' ? headerGrp.trim() : '';
+          // 1. 오늘 날짜를 YYYY-MM-DD 형식으로 생성 (원하신다면 YYYYMMDD로 변경 가능)
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const day = String(now.getDate()).padStart(2, '0');
+          const dateString = `${year}-${month}-${day}`; // 예: '2026-03-11'
 
-  //         const fileGrpId = (body.fileGrpId || fromHeader || randomUUID()).trim();
-  //         body.fileGrpId = fileGrpId; // 컨트롤러의 @Body()로도 전달되도록 유지
-  //         const dest = path.join(process.cwd(), 'uploads', fileGrpId);
-  //         ensureDir(dest);
-  //         cb(null, dest);
-  //       },
-  //       filename: (req, file, cb) => {
-  //         const orig = decodeOriginalName(file.originalname);
-  //         const fileId = randomUUID();
-  //         const ext = path.extname(orig);
-  //         // multer file 객체에 메타 저장(서비스에서 사용)
-  //         (file as any).__fileId = fileId;
-  //         (file as any).__origName = orig;
-  //         cb(null, `${fileId}${ext}`);
-  //       },
-  //     }),
-  //     limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
-  //   }),
-  // )
-  // async upload(
-  //   @UploadedFiles() files: Express.Multer.File[],
-  //   @Body() body: any,
-  //   @Headers('x-file-grp-id') headerGrpId?: string,
-  // ) {
-  //   if (!files || files.length === 0) {
-  //     // Nest가 500으로 떨어지지 않게 명확히 처리
-  //     const grp = (body?.fileGrpId || headerGrpId || null) as string | null;
-  //     return { fileGrpId: grp, items: [] };
-  //   }
+          // 2. randomUUID() 대신 dateString을 폴백(Fallback)으로 사용
+          // (만약 프론트의 요청과 무관하게 '무조건' 날짜로만 저장하고 싶으시다면 const fileGrpId = dateString; 으로 쓰시면 됩니다.)
+          //const fileGrpId = (body.fileGrpId || fromHeader || randomUUID()).trim();
+          const fileGrpId = (body.fileGrpId || fromHeader || dateString).trim();
+          
+          console.log(fileGrpId);
+          body.fileGrpId = fileGrpId; // 컨트롤러의 @Body()로도 전달되도록 유지
+          const dest = path.join(process.cwd(), 'uploads', fileGrpId);
+          ensureDir(dest);
+          cb(null, dest);
+        },
+        filename: (req, file, cb) => {
+          const orig = decodeOriginalName(file.originalname);
+          console.log(orig);
 
-  //   const firstGrp = (files[0] as any).__grpId as string | undefined;
-  //   const fileGrpId = (body?.fileGrpId || headerGrpId || firstGrp || '').trim();
+          //const fileId = randomUUID();
+          //const ext = path.extname(orig);
+          //const fileId = orig;
+          
+          // 1. 확장자 먼저 추출 (예: '.hwp')
+          const ext = path.extname(orig); 
+          // 2. 전체 파일명에서 확장자 부분만 쏙 빼고 추출 (예: 'test')
+          const fileId = path.basename(orig, ext);
+          console.log(ext);
+          console.log(fileId);
 
-  //   // ✅ 업로드 디버깅: body/header/file-fieldname/저장경로를 한 번에 출력
-  //   const fieldNames = files.map((f) => f.fieldname);
-  //   const destinations = files.map((f) => (f as any).destination || (f as any).path || '');
-  //   this.logger.debug(
-  //     `[AttachUpload] body.fileGrpId='${body?.fileGrpId ?? ''}' header.x-file-grp-id='${headerGrpId ?? ''}' resolved.fileGrpId='${fileGrpId}' fields=[${fieldNames.join(',')}] dest=[${destinations.join(',')}]`,
-  //   );
+          // multer file 객체에 메타 저장(서비스에서 사용)
+          (file as any).__fileId = fileId;
+          (file as any).__origName = orig;
+          cb(null, `${fileId}${ext}`);
+        },
+      }),
+      limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+    }),
+  )
+  async upload(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() body: any,
+    @Headers('x-file-grp-id') headerGrpId?: string,
+  ) {
+    if (!files || files.length === 0) {
+      // Nest가 500으로 떨어지지 않게 명확히 처리
+      const grp = (body?.fileGrpId || headerGrpId || null) as string | null;
+      return { fileGrpId: grp, items: [] };
+    }
 
-  //   // FE는 항상 FormData에 'files'로 전송해야 한다.
-  //   if (fieldNames.some((n) => n !== 'files')) {
-  //     throw new BadRequestException(
-  //       `Multer fieldname mismatch: expected 'files' but got [${fieldNames.join(',')}]`,
-  //     );
-  //   }
-  //   if (!fileGrpId) {
-  //     throw new BadRequestException('fileGrpId is required');
-  //   }
+    const firstGrp = (files[0] as any).__grpId as string | undefined;
+    const fileGrpId = (body?.fileGrpId || headerGrpId || firstGrp || '').trim();
 
-  //   const saved = await this.filesService.saveUploadedFiles(fileGrpId, files);
-  //   return { fileGrpId, items: saved };
-  // }
+    // ✅ 업로드 디버깅: body/header/file-fieldname/저장경로를 한 번에 출력
+    const fieldNames = files.map((f) => f.fieldname);
+    const destinations = files.map((f) => (f as any).destination || (f as any).path || '');
+    this.logger.debug(
+      `[AttachUpload] body.fileGrpId='${body?.fileGrpId ?? ''}' header.x-file-grp-id='${headerGrpId ?? ''}' resolved.fileGrpId='${fileGrpId}' fields=[${fieldNames.join(',')}] dest=[${destinations.join(',')}]`,
+    );
+
+    // FE는 항상 FormData에 'files'로 전송해야 한다.
+    if (fieldNames.some((n) => n !== 'files')) {
+      throw new BadRequestException(
+        `Multer fieldname mismatch: expected 'files' but got [${fieldNames.join(',')}]`,
+      );
+    }
+    if (!fileGrpId) {
+      throw new BadRequestException('fileGrpId is required');
+    }
+
+    const saved = await this.filesService.saveUploadedFiles(fileGrpId, files);
+    return { fileGrpId, items: saved };
+  }
 
   // /**
   //  * 파일 다운로드
