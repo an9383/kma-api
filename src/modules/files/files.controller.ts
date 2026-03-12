@@ -58,7 +58,7 @@ export class FilesController {
         const actualFilePath = path.join(
           process.cwd(), 
           'uploads', 
-          item.fileGrpId, 
+          //item.fileGrpId, 
           (item as any).saveFileNm // 서비스 반환값에 맞게 속성명 변경 필요
         ); 
         console.log(actualFilePath);
