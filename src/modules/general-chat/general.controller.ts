@@ -10,7 +10,7 @@ import { GeneralResolver } from './general.resolver';
 @Controller('api/general')
 export class GeneralController {
   private readonly logger = new Logger(GeneralController.name);
-  constructor(private readonly generalResolver: GeneralResolver, private readonly generalService: GeneralService) {}
+  constructor(private readonly generalResolver: GeneralResolver) {}
 
   // 목록조회
   @Get()
