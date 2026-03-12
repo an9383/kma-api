@@ -10,7 +10,7 @@ import { ArchiveResolver } from './archive.resolver';
 @Controller('api/archive')
 export class ArchiveController {
   private readonly logger = new Logger(ArchiveController.name);
-  constructor(private readonly archiveResolver: ArchiveResolver, private readonly archiveService: ArchiveService) {}
+  constructor(private readonly archiveResolver: ArchiveResolver) {}
 
   // 목록조회
   @Get()
