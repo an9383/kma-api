@@ -30,9 +30,9 @@ export class ArchiveService {
   }
 
     /** 채팅방 수정 및 저장 */
-  async upsert(archiveId: ArchiveUpsertInput['archive_id'], body: ArchiveUpsertInput): Promise<ArchiveEntity> {
-    this.log.log({ archiveId, body });
-    const existing = await this.repo.findOne({ where: { archive_id: archiveId } });
+  async upsert(archive_id: ArchiveUpsertInput['archive_id'], body: ArchiveUpsertInput): Promise<ArchiveEntity> {
+    this.log.log({ archive_id, body });
+    const existing = await this.repo.findOne({ where: { archive_id: archive_id } });
     if (existing) {
       this.repo.merge(existing, {
         ...existing,
@@ -45,7 +45,7 @@ export class ArchiveService {
     }
 
     const newUser = this.repo.create({
-      archive_id: archiveId,
+      archive_id: archive_id,
       app_id: body.app_id,
       room_id: body.room_id,
       last_app_name: body.last_app_name,
@@ -59,8 +59,8 @@ export class ArchiveService {
   }
   
   /** 삭제 */
-  async remove(archiveId: string): Promise<boolean> {
-    const result = await this.repo.delete(archiveId);
+  async remove(archive_id: string): Promise<boolean> {
+    const result = await this.repo.delete(archive_id);
     return result.affected ? result.affected > 0 : false;
   }
 

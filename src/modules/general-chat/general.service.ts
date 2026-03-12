@@ -25,29 +25,30 @@ export class GeneralService {
       return await qb.getMany();
     }
   
-
   /** 단건 조회 (myProfile 및 상세 조회 공용) */
   async findOne(room_id: string): Promise<GeneralEntity | null> {
     return this.repo.findOne({ where: { room_id } });
   }
 
     /** 채팅방 수정 및 저장 */
-  async upsert(roomId: GeneralUpsertInput['room_id'], body: GeneralUpsertInput): Promise<GeneralEntity> {
-    this.log.log({ roomId, body });
-    const existing = await this.repo.findOne({ where: { room_id: roomId } });
+  async upsert(room_id: GeneralUpsertInput['room_id'], body: GeneralUpsertInput): Promise<GeneralEntity> {
+    this.log.log({ room_id, body });
+    const existing = await this.repo.findOne({ where: { room_id: room_id } });
     if (existing) {
       this.repo.merge(existing, {
         user_id: body.user_id,
         room_name: body.room_name,
+        app_id: body.app_id,
         updated_at: new Date(),
       });
       return this.repo.save(existing);
     }
 
     const newUser = this.repo.create({
-      room_id: roomId,
-      room_name: body.room_name,
+      room_id: room_id,
       user_id: body.user_id,
+      room_name: body.room_name,
+      app_id: body.app_id,
       created_at: new Date(),
     });
     return this.repo.save(newUser);

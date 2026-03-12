@@ -10,7 +10,7 @@ export class UpdateArchiveDto {
   @IsString()
   room_id!: string;
 
-  @ApiPropertyOptional({ example: 'appName', type: String, description: 'Last App Name'})
+  @ApiPropertyOptional({ example: 'last_app_name', type: String, description: 'Last App Name'})
   @IsString()
   last_app_name!: string;
 

@@ -8,5 +8,9 @@ export class UpdateGeneralDto {
 
   @ApiPropertyOptional({ example: 'test_room', type: String, description: 'Room name' })
   @IsString()
-  room!: string;
+  room_name!: string;
+
+  @ApiPropertyOptional({ example: '1', type: String, description: 'App id' })
+  @IsString()
+  app_id!: string;
 }

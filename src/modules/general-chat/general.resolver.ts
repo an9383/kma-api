@@ -16,13 +16,13 @@ export class GeneralResolver {
   constructor(private svc: GeneralService) {}
 
   @Query(() => [GeneralEntity])
-  async aiList() {
+  async list() {
     return this.svc.list();
   }
 
   @Query(() => GeneralEntity)
-  general(@Args('roomId') roomId: string) {
-    return this.svc.findOne(roomId);
+  general(@Args('room_id') room_id: string) {
+    return this.svc.findOne(room_id);
   }
 
   /**
@@ -32,10 +32,9 @@ export class GeneralResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => GeneralEntity)
-  generalUpsert(@Args('roomId') roomId: string, @Args('roomName') body: GeneralUpsertInput) {
-    return this.svc.upsert(roomId, body);    
+  generalUpsert(@Args('room_id') room_id: string, @Args('body') body: GeneralUpsertInput) {
+    return this.svc.upsert(room_id, body);    
   }
-  
 
   /**
    * [보완] 회원 정보 삭제
@@ -44,7 +43,7 @@ export class GeneralResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => Boolean)
-  generalDelete(@Args('sessionId') sessionId: string) {
-    return this.svc.remove(sessionId);
+  generalDelete(@Args('room_id') room_id: string) {
+    return this.svc.remove(room_id);
   }
 }

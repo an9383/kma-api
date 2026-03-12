@@ -10,44 +10,45 @@ import { GeneralResolver } from './general.resolver';
 @Controller('api/general')
 export class GeneralController {
   private readonly logger = new Logger(GeneralController.name);
-  constructor(private readonly generalResolver: GeneralResolver) {}
+  constructor(private readonly generalResolver: GeneralResolver, private readonly generalService: GeneralService) {}
 
   // 목록조회
   @Get()
   async list() {
-    const items = await this.generalResolver.aiList();
+    const items = await this.generalResolver.list();
     return { items };
   }
 
    // sessionId로 단건 조회
-  @Get(':roomId')
-  async findOne(@Param('roomId') roomId: string) {
-    const items = await this.generalResolver.general(roomId);
+  @Get(':room_id')
+  async findOne(@Param('room_id') room_id: string) {
+    const items = await this.generalResolver.general(room_id);
     return { items };
   }
 
-  @Post(':roomId')
+  @Post(':room_id')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'roomId', type: String, required: true})
+  @ApiParam({ name: 'room_id', type: String, required: true})
   async update(
-    @Param('roomId') roomId: GeneralEntity['room_id'],
+    @Param('room_id') room_id: GeneralEntity['room_id'],
     @Body() dto: UpdateGeneralDto): Promise<GeneralEntity> {
-    const { room, user_id } = dto;
-    this.logger.log({ roomId, room, user_id });
-    return this.generalResolver.generalUpsert(roomId, {
-      room_id: roomId,
-      room_name: room,
+    const { user_id, room_name, app_id } = dto;
+    this.logger.log({ room_id, room_name, user_id });
+    return this.generalResolver.generalUpsert(room_id, {
+      room_id: room_id,
       user_id: user_id,
+      room_name: room_name,
+      app_id: app_id,
     });
   }
 
-  @Delete(':roomId')
+  @Delete(':room_id')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'roomId', type: String, required: true})
+  @ApiParam({ name: 'room_id', type: String, required: true})
   async delete(
-    @Param('roomId') roomId: string) {
-    this.logger.log({ roomId});
-    const items = await this.generalResolver.generalDelete(roomId);
+    @Param('room_id') room_id: string) {
+    this.logger.log({ room_id});
+    const items = await this.generalResolver.generalDelete(room_id);
     return { items };
   }
 }

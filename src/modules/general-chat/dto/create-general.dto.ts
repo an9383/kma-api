@@ -13,9 +13,9 @@ import { lowerCaseTransformer } from './lower-case.transformer';
 export class CreateGeneralDto {
   @ApiPropertyOptional({ example: '1', type: String })
   @Transform(lowerCaseTransformer)
-  sessionId?: string | null;
+  room_id?: string | null;
 
   @ApiPropertyOptional({ example: 'test_room', type: String })
   @IsOptional()
-  roomName?: string | null;
+  room_name?: string | null;
 }

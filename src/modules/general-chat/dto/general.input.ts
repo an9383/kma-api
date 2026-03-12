@@ -16,9 +16,10 @@ export class GeneralSearchListInput {
 
 @InputType()
 export class GeneralUpsertInput {
-  @Field() @IsString()  @MaxLength(50) room_id!: string; 
-  @Field() @IsString()  @MaxLength(50)  user_id!: string; 
-  @Field() @IsString()  @MaxLength(50)  room_name!: string; 
+  @Field() @IsString()  @MaxLength(20) room_id!: string; 
+  @Field() @IsString()  @MaxLength(100)  user_id!: string; 
+  @Field() @IsString()  @MaxLength(255)  room_name!: string; 
+  @Field() @IsString()  @MaxLength(100)  app_id!: string; 
   @Field({ nullable: true }) @IsOptional() @IsString() @MaxLength(50) created_at?: string; 
   @Field({ nullable: true }) @IsOptional() @IsString() @MaxLength(50) updated_at?: string; 
 }

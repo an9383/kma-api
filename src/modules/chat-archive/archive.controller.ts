@@ -20,22 +20,22 @@ export class ArchiveController {
   }
 
    // archiveId로 단건 조회
-  @Get(':archiveId')
-  async findOne(@Param('archiveId') archiveId: string) {
-    const items = await this.archiveResolver.archive(archiveId);
+  @Get(':archive_id')
+  async findOne(@Param('archive_id') archive_id: string) {
+    const items = await this.archiveResolver.archive(archive_id);
     return { items };
   }
 
-  @Post(':archiveId')
+  @Post(':archive_id')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'archiveId', type: String, required: true})
+  @ApiParam({ name: 'archive_id', type: String, required: true})
   async update(
-    @Param('archiveId') archiveId: ArchiveEntity['archive_id'],
+    @Param('archive_id') archive_id: ArchiveEntity['archive_id'],
     @Body() dto: UpdateArchiveDto): Promise<ArchiveEntity> {
     const { app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id } = dto;
-    this.logger.log({ archiveId, app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id });
-    return this.archiveResolver.archiveUpsert(archiveId, {
-      archive_id: archiveId,
+    this.logger.log({ archive_id, app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id });
+    return this.archiveResolver.archiveUpsert(archive_id, {
+      archive_id: archive_id,
       app_id: app_id,
       room_id: room_id,
       last_app_name: last_app_name,
@@ -46,13 +46,13 @@ export class ArchiveController {
     });
   }
 
-  @Delete(':archiveId')
+  @Delete(':archive_id')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'archiveId', type: String, required: true})
+  @ApiParam({ name: 'archive_id', type: String, required: true})
   async delete(
-    @Param('archiveId') archiveId: string) {
-    this.logger.log({ archiveId});
-    const items = await this.archiveResolver.archiveDelete(archiveId);
+    @Param('archive_id') archive_id: string) {
+    this.logger.log({ archive_id});
+    const items = await this.archiveResolver.archiveDelete(archive_id);
     return { items };
   }
 }

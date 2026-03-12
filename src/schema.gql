@@ -67,6 +67,7 @@ type GeneralEntity {
 }
 
 input GeneralUpsertInput {
+  app_id: String!
   created_at: String
   room_id: String!
   room_name: String!
@@ -126,13 +127,13 @@ type MenuEntity {
 }
 
 type Mutation {
-  archiveDelete(archiveId: String!): Boolean!
-  archiveUpsert(archiveId: String!, roomName: ArchiveUpsertInput!): ArchiveEntity!
+  archiveDelete(archive_id: String!): Boolean!
+  archiveUpsert(archive_id: String!, body: ArchiveUpsertInput!): ArchiveEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
-  generalDelete(sessionId: String!): Boolean!
-  generalUpsert(roomId: String!, roomName: GeneralUpsertInput!): GeneralEntity!
+  generalDelete(room_id: String!): Boolean!
+  generalUpsert(body: GeneralUpsertInput!, room_id: String!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
@@ -143,13 +144,13 @@ type Mutation {
 }
 
 type Query {
-  aiList: [GeneralEntity!]!
-  archive(archiveId: String!): ArchiveEntity!
+  archive(archive_id: String!): ArchiveEntity!
   archiveList: [ArchiveEntity!]!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
-  general(roomId: String!): GeneralEntity!
+  general(room_id: String!): GeneralEntity!
+  list: [GeneralEntity!]!
   member(userId: String!): MemberEntity
   memberList(input: MemberSearchInput): [MemberEntity!]!
   menuList: [MenuEntity!]!
