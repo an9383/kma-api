@@ -1,13 +1,7 @@
 import { Args, Mutation, Query, Resolver} from '@nestjs/graphql';
-import { UseGuards, Logger, } from '@nestjs/common';
 import { GeneralEntity } from './entities/general.entity';
 import { GeneralService } from './general.service';
-import { GeneralUpsertInput, GeneralSearchListInput } from './dto/general.input';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { UpdateGeneralDto } from './dto/update-general.dto';
-import { ApiParam } from '@nestjs/swagger';
+import { GeneralUpsertInput, ChatSessionInput } from './dto/general.input';
 
 /**
  * 회원 도메인의 데이터 조작 및 조회를 담당하는 인터페이스 레이어입니다
@@ -27,8 +21,14 @@ export class GeneralResolver {
   }
 
   @Mutation(() => GeneralEntity)
-  generalChatSession(@Args('room_id') room_id: string, @Args('session_id') session_id: string) {
-    return this.svc.runChatSession({room_id, session_id});    
+  generalChatSession(@Args('stream', { type: () => Boolean, nullable: true }) stream: boolean,
+                     @Args('session_id') session_id: string, 
+                     @Args('body') body: ChatSessionInput) {
+      return this.svc.runChatSession(
+      stream, 
+      session_id, 
+      body 
+    );  
   }
 
   /**

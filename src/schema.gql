@@ -32,6 +32,13 @@ type AuthUser {
   userName: String!
 }
 
+input ChatSessionInput {
+  input_type: String!
+  input_value: String!
+  output_type: String!
+  session_id: String!
+}
+
 type CommonCodeEntity {
   comnCd: String!
   comnDiv: String
@@ -132,7 +139,7 @@ type Mutation {
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
-  generalChatSession(room_id: String!, session_id: String!): GeneralEntity!
+  generalChatSession(body: ChatSessionInput!, session_id: String!, stream: Boolean): GeneralEntity!
   generalDelete(room_id: String!): Boolean!
   generalUpsert(body: GeneralUpsertInput!, room_id: String!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!

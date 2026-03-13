@@ -2,11 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GeneralEntity } from './entities/general.entity';
-import { GeneralUpsertInput } from './dto/general.input';
-import { UpdateGeneralDto } from './dto/update-general.dto';
+import { GeneralUpsertInput, ChatSessionInput } from './dto/general.input';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import {ChatSessionParamsDto} from './dto/chat-session.dto';
 import { AxiosError } from 'axios';
 
 
@@ -34,14 +32,14 @@ export class GeneralService {
   }
 
   /** 채팅방 수정 및 저장 */
-  async runChatSession({ room_id, session_id }: ChatSessionParamsDto): Promise<GeneralEntity> {
-  this.log.log(`요청된 Room ID: ${room_id}`);
+  async runChatSession( stream: boolean, session_id: string, body: ChatSessionInput): Promise<GeneralEntity> {
+  this.log.log(`요청된 Room ID: ${stream}`);
   this.log.log(`요청된 Session ID: ${session_id}`);
+  this.log.log(`요청된 Body: ${body}`);
 
   // 1. 동적 URL 및 쿼리 스트링 구성
-  // (호스트 주소는 환경 변수(ConfigService)로 분리하는 것을 권장합니다)
   const baseUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/chat';
-  const athenaApiUrl = `${baseUrl}/${room_id}/run?stream=false&session_id=${session_id}`;
+  const athenaApiUrl = `${baseUrl}/2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run?stream=${stream}&session_id=${session_id}`;
 
   try {
     const athenaUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/auth/token/direct'; 
@@ -58,19 +56,18 @@ export class GeneralService {
     const token = json?.data?.access_token || json?.access_token; 
     console.log('✅ [디버깅] 추출된 토큰 값:', token);
 
-    // 토큰이 없으면 강제로 에러를 발생시켜 어디서 문제인지 명확히 합니다.
     if (!token) {
       throw new Error('토큰을 찾을 수 없습니다. Auth API 응답 구조를 확인하세요.');
     }
-
+    
     const response = await firstValueFrom(
       this.httpService.post(
         athenaApiUrl, 
         {
-          "output_type": "chat",
-          "input_type": "chat",
-          "input_value": "최근 뉴스 알려줘"
-        }, 
+          "output_type": body.output_type,
+          "input_type": body.input_type,
+          "input_value": body.input_value
+        },
         {   
           headers: {
             'Content-Type': 'application/json',

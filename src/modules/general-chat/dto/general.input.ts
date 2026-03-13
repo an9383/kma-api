@@ -1,18 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsOptional, IsString, MaxLength, IsEmail, MinLength } from 'class-validator';
-import { PartialType, ApiPropertyOptional } from '@nestjs/swagger';
-import { CreateGeneralDto } from './create-general.dto';
-import { Transform, Type } from 'class-transformer';
-import { lowerCaseTransformer } from './lower-case.transformer';
-import { RoleDto } from './role.dto';
-import { StatusDto } from './status.dto';
-
-@InputType()
-export class GeneralSearchListInput {
-  //@Field() @IsString()  @MaxLength(50)  session_id!: string; 
-  @Field({ nullable: true }) @IsOptional() startDate?: string; 
-  @Field({ nullable: true }) @IsOptional() endDate?: string; 
-}
+import { IsOptional, IsString, MaxLength, IsNotEmpty, IsObject } from 'class-validator';
+import { PartialType, ApiPropertyOptional, ApiProperty } from '@nestjs/swagger';
 
 @InputType()
 export class GeneralUpsertInput {
@@ -24,37 +12,30 @@ export class GeneralUpsertInput {
   @Field({ nullable: true }) @IsOptional() @IsString() @MaxLength(50) updated_at?: string; 
 }
 
-// export class UpdateGeneralDto extends PartialType(CreateGeneralDto) {
-//   @ApiPropertyOptional({ example: 'test1@example.com', type: String })
-//   @Transform(lowerCaseTransformer)
-//   @IsOptional()
-//   @IsEmail()
-//   email?: string | null;
+@InputType() 
+export class ChatSessionInput {
+  @ApiProperty({ example: 'chat' })
+  @Field(() => String) 
+  @IsString()
+  @IsNotEmpty()
+  output_type!: string;
 
-//   @ApiPropertyOptional()
-//   @IsOptional()
-//   @MinLength(6)
-//   password?: string;
+  @ApiProperty({ example: 'chat' })
+  @Field(() => String) 
+  @IsString()
+  @IsNotEmpty()
+  input_type!: string;
 
-//   provider?: string;
+  @ApiProperty({ example: '최근 뉴스 알려줘' })
+  @Field(() => String) 
+  @IsString()
+  @IsNotEmpty()
+  input_value!: string;
 
-//   socialId?: string | null;
+  @ApiProperty({ example: 'usr=6350811d-19eb-4038-b7f5-1e919825dadc-pj=cce978e9-aceb-4ff7-b913-fa48e4e1f392-app=2e30b179-7ff2-4ef0-ae13-b734dc589ef3-sf=v9B2mQxP7yL1dWkR' })
+  @Field(() => String) 
+  @IsString()
+  @IsOptional()
+  session_id?: string;
+}
 
-//   @ApiPropertyOptional({ example: 'John', type: String })
-//   @IsOptional()
-//   firstName?: string | null;
-
-//   @ApiPropertyOptional({ example: 'Doe', type: String })
-//   @IsOptional()
-//   lastName?: string | null;
-
-//   @ApiPropertyOptional({ type: () => RoleDto })
-//   @IsOptional()
-//   @Type(() => RoleDto)
-//   role?: RoleDto | null;
-
-//   @ApiPropertyOptional({ type: () => StatusDto })
-//   @IsOptional()
-//   @Type(() => StatusDto)
-//   status?: StatusDto;
-// }
