@@ -6,7 +6,6 @@ import { ChatSessionInput } from './dto/general.input';
 import { UpdateGeneralDto } from './dto/update-general.dto';
 import { GeneralResolver } from './general.resolver';
 
-
 @ApiTags('api/general')
 @Controller('api/general')
 export class GeneralController {
