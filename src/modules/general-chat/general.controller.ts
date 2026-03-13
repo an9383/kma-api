@@ -27,7 +27,7 @@ export class GeneralController {
     return { items };
   }
 
-  @Post('/create')
+  @Post('/upsert')
   @HttpCode(HttpStatus.OK)
   async update(
     @Query('session_id') room_id: string,

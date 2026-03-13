@@ -16,48 +16,51 @@ import { StatusDto } from './status.dto';
 
 @InputType()
 export class ArchiveUpsertInput {
-  @Field() @IsString() @MaxLength(50) archive_id!: string; 
+  //@Field() @IsString() @MaxLength(50) archive_id!: string; 
   @Field() @IsString() @MaxLength(100) app_id!: string; 
-  @Field() @IsString() @MaxLength(200) room_id!: string; 
+  //@Field() @IsString() @MaxLength(200) room_id!: string; 
   @Field() @IsString() @MaxLength(50) last_app_name!: string; 
-  @Field() @IsString() @MaxLength(100) last_app_type_code!: string; 
+  @Field() @IsString() @MaxLength(100) last_app_type_code!: string;
+  @Field() @IsString() @MaxLength(100) user_id!: string;   
   @Field() @IsString() @MaxLength(50) question!: string; 
   @Field() @IsString() @MaxLength(100) answer!: string;
-  @Field() @IsString() @MaxLength(100) user_id!: string;   
   @Field({ nullable: true }) @IsOptional() @IsString() @MaxLength(50) created_at?: string; 
 }
 
-// export class UpdateArchiveDto extends PartialType(CreateGeneralDto) {
-//   @ApiPropertyOptional({ example: 'test1@example.com', type: String })
-//   @Transform(lowerCaseTransformer)
-//   @IsOptional()
-//   @IsEmail()
-//   email?: string | null;
+@InputType()
+export class UpdateArchiveDto {
+  @ApiPropertyOptional({ example: '1', type: String, description: 'App id'})
+  @Field(() => String) // ✅ GraphQL 필드 인식
+  @IsString()
+  app_id!: string;
 
-//   @ApiPropertyOptional()
-//   @IsOptional()
-//   @MinLength(6)
-//   password?: string;
+  @ApiPropertyOptional({ example: '1', type: String, description: 'Room id'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  room_id!: string;
 
-//   provider?: string;
+  @ApiPropertyOptional({ example: 'last_app_name', type: String, description: 'Last App Name'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  last_app_name!: string;
 
-//   socialId?: string | null;
+  @ApiPropertyOptional({ example: 'general', type: String, description: 'Last App Type Code'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  last_app_type_code!: string;
 
-//   @ApiPropertyOptional({ example: 'John', type: String })
-//   @IsOptional()
-//   firstName?: string | null;
+  @ApiPropertyOptional({ example: '1', type: String, description: 'User id'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  user_id!: string;
 
-//   @ApiPropertyOptional({ example: 'Doe', type: String })
-//   @IsOptional()
-//   lastName?: string | null;
+  @ApiPropertyOptional({ example: 'question', type: String, description: 'question'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  question!: string;
 
-//   @ApiPropertyOptional({ type: () => RoleDto })
-//   @IsOptional()
-//   @Type(() => RoleDto)
-//   role?: RoleDto | null;
-
-//   @ApiPropertyOptional({ type: () => StatusDto })
-//   @IsOptional()
-//   @Type(() => StatusDto)
-//   status?: StatusDto;
-// }
+  @ApiPropertyOptional({ example: 'answer', type: String, description: 'answer'})
+  @Field(() => String) // ✅ 추가
+  @IsString()
+  answer!: string;
+}

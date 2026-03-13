@@ -17,12 +17,10 @@ type ArchiveEntity {
 input ArchiveUpsertInput {
   answer: String!
   app_id: String!
-  archive_id: String!
   created_at: String
   last_app_name: String!
   last_app_type_code: String!
   question: String!
-  room_id: String!
   user_id: String!
 }
 
@@ -134,8 +132,8 @@ type MenuEntity {
 }
 
 type Mutation {
-  archiveDelete(archive_id: String!): Boolean!
-  archiveUpsert(archive_id: String!, body: ArchiveUpsertInput!): ArchiveEntity!
+  archiveDelete(room_id: String!): Boolean!
+  archiveUpsert(body: ArchiveUpsertInput!, room_id: String!): ArchiveEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!

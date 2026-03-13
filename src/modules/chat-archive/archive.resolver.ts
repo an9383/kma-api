@@ -3,16 +3,13 @@ import { UseGuards, Logger, } from '@nestjs/common';
 import { ArchiveEntity } from './entities/archive.entity';
 import { ArchiveService } from './archive.service';
 import { ArchiveUpsertInput } from './dto/archive.input';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
-import { UpdateArchiveDto } from './dto/update-archive.dto';
 
 /**
  * 회원 도메인의 데이터 조작 및 조회를 담당하는 인터페이스 레이어입니다
  */
 @Resolver(() => ArchiveEntity)
 export class ArchiveResolver {
+  private readonly logger = new Logger(ArchiveResolver.name);
   constructor(private svc: ArchiveService) {}
 
   @Query(() => [ArchiveEntity])
@@ -21,8 +18,8 @@ export class ArchiveResolver {
   }
 
   @Query(() => ArchiveEntity)
-  archive(@Args('archive_id') archive_id: string) {
-    return this.svc.findOne(archive_id);
+  archive(@Args('archive_id') room_id: string) {
+    return this.svc.findOne(room_id);
   }
 
   /**
@@ -32,8 +29,12 @@ export class ArchiveResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => ArchiveEntity)
-  archiveUpsert(@Args('archive_id') archive_id: string, @Args('body') body: ArchiveUpsertInput) {
-    return this.svc.upsert(archive_id, body);    
+  async archiveUpsert(
+    @Args('room_id') room_id: string,
+    @Args('body', { type: () => ArchiveUpsertInput }) body: ArchiveUpsertInput 
+  ) {
+    this.logger.log(room_id, body)
+    return this.svc.upsert(room_id, body);
   }
   
   /**
@@ -43,7 +44,7 @@ export class ArchiveResolver {
   // @UseGuards(GqlAuthGuard, RolesGuard)
   // @Roles('ADMIN')
   @Mutation(() => Boolean)
-  archiveDelete(@Args('archive_id') archive_id: string) {
-    return this.svc.remove(archive_id);
+  archiveDelete(@Args('room_id') room_id: string) {
+    return this.svc.remove(room_id);
   }
 }

@@ -2,8 +2,7 @@ import { Controller, Req, Get, Post, Put, Patch, Delete, Body, Query, Param, Log
 import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { ArchiveService } from './archive.service';
 import { ArchiveEntity } from './entities/archive.entity';
-import { ArchiveUpsertInput } from './dto/archive.input';
-import { UpdateArchiveDto } from './dto/update-archive.dto';
+import { ArchiveUpsertInput, UpdateArchiveDto } from './dto/archive.input';
 import { ArchiveResolver } from './archive.resolver';
 
 @ApiTags('api/archive')
@@ -20,39 +19,31 @@ export class ArchiveController {
   }
 
    // archiveId로 단건 조회
-  @Get(':archive_id')
-  async findOne(@Param('archive_id') archive_id: string) {
-    const items = await this.archiveResolver.archive(archive_id);
+  @Get('/get')
+  async findOne(@Query('session_id') room_id: string) {
+    const items = await this.archiveResolver.archive(room_id);
     return { items };
   }
 
-  @Post(':archive_id')
+  @Post('/upsert')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'archive_id', type: String, required: true})
   async update(
-    @Param('archive_id') archive_id: ArchiveEntity['archive_id'],
-    @Body() dto: UpdateArchiveDto): Promise<ArchiveEntity> {
-    const { app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id } = dto;
-    this.logger.log({ archive_id, app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id });
-    return this.archiveResolver.archiveUpsert(archive_id, {
-      archive_id: archive_id,
-      app_id: app_id,
-      room_id: room_id,
-      last_app_name: last_app_name,
-      last_app_type_code: last_app_type_code,
-      question: question,
-      answer: answer,
-      user_id: user_id
-    });
+    @Query('session_id') room_id: string,
+    @Body() dto: ArchiveUpsertInput 
+  ): Promise<ArchiveEntity> {
+    const { app_id, last_app_name, last_app_type_code, question, answer, user_id } = dto;
+    this.logger.log({ app_id, room_id, last_app_name, last_app_type_code, question, answer, user_id });
+    
+    // ✅ 2. 객체를 새로 만들지 말고 dto 변수를 그대로 넘깁니다!
+    return this.archiveResolver.archiveUpsert(room_id, dto); 
   }
 
-  @Delete(':archive_id')
+  @Delete('/delete')
   @HttpCode(HttpStatus.OK)
-  @ApiParam({ name: 'archive_id', type: String, required: true})
   async delete(
-    @Param('archive_id') archive_id: string) {
-    this.logger.log({ archive_id});
-    const items = await this.archiveResolver.archiveDelete(archive_id);
+    @Query('session_id') room_id: string) {
+    this.logger.log({ room_id});
+    const items = await this.archiveResolver.archiveDelete(room_id);
     return { items };
   }
 }
