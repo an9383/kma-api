@@ -38,13 +38,8 @@ export class FilesController {
   async list(@Body('fileList') fileList: string[], @Res() res: Response) { 
     const items = await this.filesService.list(fileList);
       try {
-        // 1. 헤더 설정 시 상태 코드(200)를 명시적으로 먼저 보냅니다.
-      res.status(200);
-      
-      // 2. res.set 대신 Express의 attachment 메서드를 사용해 헤더 덮어쓰기 방지!
-      res.attachment('my-download.zip');
-      
-      // 3. CORS 이슈를 위해 Expose 헤더만 추가
+      res.setHeader('Content-Type', 'application/zip');
+      res.setHeader('Content-Disposition', 'attachment; filename=my-download.zip');
       res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
       // res.set({
       //   'Content-Type': 'application/zip',

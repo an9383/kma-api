@@ -42,6 +42,16 @@ export class GeneralController {
     });
   }
 
+  @Post('/run/:room_id')
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({ name: 'room_id', type: String, required: true})
+  runChatSession(@Param('room_id') room_id: string, @Query('session_id') session_id: string) {
+    this.logger.log({ room_id, session_id}); // "125cef24-d34c-4dc2-9a8e-b7c8dbd6561e"
+
+    //return { success: true, room_id };
+    return this.generalResolver.generalChatSession(room_id, session_id);
+  }
+
   @Delete(':room_id')
   @HttpCode(HttpStatus.OK)
   @ApiParam({ name: 'room_id', type: String, required: true})

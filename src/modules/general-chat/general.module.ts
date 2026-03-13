@@ -4,9 +4,10 @@ import { GeneralEntity } from './entities/general.entity';
 import { GeneralResolver } from './general.resolver';
 import { GeneralService } from './general.service';
 import { GeneralController } from './general.controller';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GeneralEntity])], 
+  imports: [TypeOrmModule.forFeature([GeneralEntity]), HttpModule], 
   controllers: [GeneralController],
   providers: [GeneralResolver, GeneralService],
   exports: [GeneralService],

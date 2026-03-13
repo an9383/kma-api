@@ -132,6 +132,7 @@ type Mutation {
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
+  generalChatSession(room_id: String!, session_id: String!): GeneralEntity!
   generalDelete(room_id: String!): Boolean!
   generalUpsert(body: GeneralUpsertInput!, room_id: String!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!

@@ -110,7 +110,28 @@ export class AuthService {
           "password": pw
         })
       );
-      console.log(response);
+      console.log(response.data);
+
+      let json;
+      try {
+          json = response.data.json();
+      } catch (e) {
+          console.error("❌ 응답을 JSON으로 파싱할 수 없습니다:", e);
+          return;
+      }
+
+      if (json.data && json.data.access_token) {
+          const access_token = response.data.environment.set("access_token", json.data.access_token);
+          console.log("✅ access_token 저장 완료:", json.data.access_token);
+
+          if (json.data.refresh_token) {
+              pm.environment.set("refresh_token", json.data.refresh_token);
+              console.log("✅ refresh_token 저장 완료");
+          }
+      } else {
+          console.warn("⚠️ access_token이 응답에 없습니다.");
+          console.log("응답:", json);
+      }
 
       // 4. 발급받은 데이터(Athena 세션/토큰 정보) 반환
       return response.data;
