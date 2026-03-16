@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { UseGuards, Logger, } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import { ArchiveEntity } from './entities/archive.entity';
 import { ArchiveService } from './archive.service';
 import { ArchiveUpsertInput } from './dto/archive.input';

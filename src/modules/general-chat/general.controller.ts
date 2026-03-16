@@ -1,10 +1,12 @@
-import { Controller, Req, Get, Post, Put, Patch, Delete, Body, Query, Param, Logger, HttpStatus, HttpCode} from '@nestjs/common';
+import { Controller, Req, Get, Post, Sse, MessageEvent, Delete, Body, Query, Param, Logger, HttpStatus, HttpCode} from '@nestjs/common';
 import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { GeneralService } from './general.service';
 import { GeneralEntity } from './entities/general.entity';
 import { ChatSessionInput } from './dto/general.input';
 import { UpdateGeneralDto } from './dto/update-general.dto';
 import { GeneralResolver } from './general.resolver';
+import { Subject, Observable } from 'rxjs';
+
 
 @ApiTags('api/general')
 @Controller('api/general')
@@ -41,12 +43,24 @@ export class GeneralController {
     });
   }
 
+  // @Post('2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run')
+  // @HttpCode(HttpStatus.OK)
+  // async runChatSession(@Query('stream') stream: boolean, @Query('session_id') session_id: string, @Body() body: ChatSessionInput) {
+  //   return this.generalResolver.generalChatSession(stream, session_id, body);
+  // }
+
   @Post('2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run')
   @HttpCode(HttpStatus.OK)
-  async runChatSession(@Query('stream') stream: boolean, @Query('session_id') session_id: string, @Body() body: ChatSessionInput) {
-    this.logger.log({ stream, session_id, body}); // "125cef24-d34c-4dc2-9a8e-b7c8dbd6561e"
+  @Sse()
+  runChatSession(@Query('stream') stream: boolean, @Query('session_id') session_id: string, @Body() body: ChatSessionInput): Observable<MessageEvent> {
+    // 데이터 스트림을 담을 통(Subject) 생성
+    const subject = new Subject<MessageEvent>();
 
-    return this.generalResolver.generalChatSession(stream, session_id, body);
+    // 서비스 로직 실행 (통을 넘겨주어 서비스에서 데이터를 채워 넣도록 함)
+    this.generalService.runChatSession(stream, session_id, body, subject);
+
+    // 프론트엔드로는 관찰 가능한 형태(Observable)로 반환
+    return subject.asObservable();
   }
 
   @Delete('/delete')

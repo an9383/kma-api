@@ -203,25 +203,4 @@ export class FilesController {
     const saved = await this.filesService.saveUploadedFiles(fileGrpId, files);
     return { fileGrpId, items: saved };
   }
-
-  // /**
-  //  * 파일 다운로드
-  //  */
-  // @Get(':fileGrpId/:fileId/download')
-  // async download(
-  //   @Param('fileGrpId') fileGrpId: string,
-  //   @Param('fileId') fileId: string,
-  //   @Res() res: Response,
-  // ) {
-  //   return this.filesService.download(fileGrpId, fileId, res);
-  // }
-
-  // /**
-  //  * 파일 삭제(논리삭제 + 실제 파일 삭제)
-  //  */
-  // @Delete(':fileGrpId/:fileId')
-  // async remove(@Param('fileGrpId') fileGrpId: string, @Param('fileId') fileId: string) {
-  //   await this.filesService.remove(fileGrpId, fileId);
-  //   return { ok: true };
-  // }
 }
