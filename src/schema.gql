@@ -30,6 +30,27 @@ type AuthUser {
   userName: String!
 }
 
+type ChatBotEntity {
+  app_description: String!
+  app_id: String!
+  app_name: String!
+  app_type_code: String!
+  created_at: DateTime!
+  is_active: Boolean!
+  user_id: String!
+}
+
+input ChatBotUpsertInput {
+  app_description: String!
+  app_name: String!
+  app_type_code: String!
+  input_type: String!
+  input_value: String!
+  is_active: Boolean!
+  output_type: String!
+  user_id: String!
+}
+
 type CommonCodeEntity {
   comnCd: String!
   comnDiv: String
@@ -127,6 +148,8 @@ type MenuEntity {
 type Mutation {
   archiveDelete(room_id: String!): Boolean!
   archiveUpsert(body: ArchiveUpsertInput!, room_id: String!): ArchiveEntity!
+  chatBotDelete(room_id: String!): Boolean!
+  chatBotUpsert(body: ChatBotUpsertInput!, room_id: String!): ChatBotEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
@@ -144,6 +167,9 @@ type Mutation {
 type Query {
   archive(archive_id: String!): ArchiveEntity!
   archiveList: [ArchiveEntity!]!
+  chatBot(chatbot_id: String!): ChatBotEntity!
+  chatBotList: [ChatBotEntity!]!
+  chatBotTypeList(app_type_code: String!): ChatBotEntity!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!

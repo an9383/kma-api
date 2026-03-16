@@ -36,7 +36,6 @@ export class GeneralService {
   /** 채팅방 수정 및 저장 */
   async runChatSession( stream: boolean, session_id: string, body: ChatSessionInput, subject: Subject<MessageEvent>): Promise<void> {
 
-  // 1. 동적 URL 및 쿼리 스트링 구성
   const baseUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/chat';
   const athenaApiUrl = `${baseUrl}/2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run?stream=${stream}&session_id=${session_id}`;
 
@@ -90,23 +89,10 @@ export class GeneralService {
           try {
             subject.next({ data: JSON.parse(line) }); 
           } catch (error) {
-            console.error('🚧 [중간 청크 파싱 에러]:', (error as Error).message);
+            console.error('🚧 [중간 Chunk 파싱 에러]:', (error as Error).message);
           }
         }
     });
-
-      // 4. 외부 API 스트림 전송이 완료되면 클라이언트와의 연결도 정상 종료
-      response.data.on('end', () => {
-        buffer += decoder.end(); 
-        if (buffer.trim()) {
-           try { 
-            subject.next({ data: JSON.parse(buffer) });
-          } catch(e) { 
-            console.error('🚨 [마지막 버퍼 파싱 에러]:', (e as Error).message); 
-          }
-        }
-        subject.complete(); // 정상 완료
-      });
 
       // response.data.on('close', () => {
       //   // 이미 end가 호출되어 stream이 닫힌 상태가 아니라면, 비정상 종료된 것임
@@ -119,6 +105,20 @@ export class GeneralService {
       //       subject.complete();
       //   }
       // });
+
+      // 4. 외부 API 스트림 전송이 완료되면 클라이언트와의 연결도 정상 종료
+      response.data.on('end', () => {
+        buffer += decoder.end(); 
+        if (buffer.trim()) {
+           try { 
+            subject.next({ data: JSON.parse(buffer) });
+          } catch(e) { 
+            console.error('🚨 [End 버퍼 파싱 에러]:', (e as Error).message); 
+          }
+        }
+        subject.complete();
+      });
+
 
       response.data.on('error', (err: Error) => {
         console.error('🔥 [Axios 스트림 에러]:', err.message);

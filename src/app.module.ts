@@ -21,6 +21,7 @@ import { UserModule } from './modules/user/user.module';
 import { GeneralModule } from './modules/general-chat/general.module';
 import { ArchiveModule } from './modules/chat-archive/archive.module';
 import { FilesModule } from './modules/files/files.module';
+import { ChatBotModule } from './modules/chatbot/chatbot.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { FilesModule } from './modules/files/files.module';
     GeneralModule,
     ArchiveModule,
     FilesModule,
+    ChatBotModule,
     HealthModule,
     AuthModule,
     MemberModule,

@@ -43,13 +43,13 @@ export class GeneralController {
     });
   }
 
-  // @Post('2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run')
+  // @Post('/getchat')
   // @HttpCode(HttpStatus.OK)
   // async runChatSession(@Query('stream') stream: boolean, @Query('session_id') session_id: string, @Body() body: ChatSessionInput) {
   //   return this.generalResolver.generalChatSession(stream, session_id, body);
   // }
 
-  @Post('2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run')
+  @Post('/getchat')
   @HttpCode(HttpStatus.OK)
   @Sse()
   runChatSession(@Query('stream') stream: boolean, @Query('session_id') session_id: string, @Body() body: ChatSessionInput): Observable<MessageEvent> {
