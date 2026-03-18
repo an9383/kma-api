@@ -19,8 +19,8 @@ export class ChatBotController {
   }
 
   // 타입별목록조회
-  @Get('/typelist')
-  async appList(@Query('app_type_code') app_type_code: string) {
+  @Get('/gettypelist')
+  async findTypeList(@Query('app_type_code') app_type_code: string) {
     const items = await this.chatBotResolver.chatBotTypeList(app_type_code);
     return { items };
   }
@@ -34,10 +34,10 @@ export class ChatBotController {
   }
 
   // chatBotAppId로 단건 조회
-  @Get('/getlist')
-  async findList(@Query('user_id') user_id: string) {
+  @Get('/getmylist')
+  async findMyList(@Query('user_id') user_id: string) {
     console.log(user_id);
-    const items = await this.chatBotResolver.chatBotUser(user_id);
+    const items = await this.chatBotResolver.chatBotMyList(user_id);
     return { items };
   }
 

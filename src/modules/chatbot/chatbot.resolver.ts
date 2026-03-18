@@ -19,6 +19,7 @@ export class ChatBotResolver {
 
   @Query(() => ChatBotEntity)
   chatBotTypeList(@Args('app_type_code') app_type_code: string) {
+    console.log(app_type_code);
     return this.svc.appTypeList(app_type_code);
   }
 
@@ -29,9 +30,9 @@ export class ChatBotResolver {
   }
 
   @Query(() => ChatBotEntity)
-  chatBotUser(@Args('user_id') user_id: string) {
+  chatBotMyList(@Args('user_id') user_id: string) {
     console.log(user_id);
-    return this.svc.findUserList(user_id);
+    return this.svc.findMyList(user_id);
   }
 
   /**

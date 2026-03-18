@@ -170,8 +170,8 @@ type Query {
   archiveList: [ArchiveEntity!]!
   chatBot(sub_app_id: String!): ChatBotEntity!
   chatBotList: [ChatBotEntity!]!
+  chatBotMyList(user_id: String!): ChatBotEntity!
   chatBotTypeList(app_type_code: String!): ChatBotEntity!
-  chatBotUser(user_id: String!): ChatBotEntity!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!

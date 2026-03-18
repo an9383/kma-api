@@ -1,4 +1,4 @@
-import { Injectable, Logger, Inject, MessageEvent } from '@nestjs/common';
+import { Injectable, Logger, Inject, MessageEvent, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { ChatBotEntity } from './entities/chatbot.entity';
@@ -22,15 +22,24 @@ export class ChatBotService {
 
   /** 목록 조회 */
   async list() {
-    const qb = this.repo.createQueryBuilder('m');
-      return await qb.getMany();
+    const queryBuilder = this.repo.createQueryBuilder('m');
+      return await queryBuilder.getMany();
     }
 
   /** 앱 타입별 목록 조회 */
   async appTypeList(app_type_code: string) {
-    const qb = this.repo.createQueryBuilder('m');
-    qb.where('m.app_type_code = :app_type_code', { app_type_code: app_type_code });
-    return await qb.getMany();
+    const queryBuilder = this.repo.createQueryBuilder('m');
+    queryBuilder.where('m.app_type_code = :app_type_code', { app_type_code: app_type_code });
+
+    console.log(queryBuilder.getQuery());
+    console.log(queryBuilder.getParameters());
+
+        // 2. 쿼리 실행 및 결과 저장
+    const result = await queryBuilder.getMany(); 
+    console.log(result);
+
+    // 3. 결과 반환
+    return result; 
   }
 
   // async findUserList(userId: string) {
@@ -51,12 +60,32 @@ export class ChatBotService {
   //   return [...generalAndKnowledgeApps, ...assistantApps];
   // }
 
-async findUserList(userId: string) {
+// async findUserList(userId: string) {
+//     // 1. 쿼리 빌더 생성
+//     const queryBuilder = this.repo
+//       .createQueryBuilder('app')
+//       .where('app.app_type_code IN (:...types)', { types: ['general', 'knowledge'] })
+//       .orWhere('(app.app_type_code = :assistantType AND app.user_id = :userId)', {
+//         assistantType: 'assistant',
+//         userId: String(userId), 
+//       });
+
+//     console.log(queryBuilder.getQuery());
+//     console.log(queryBuilder.getParameters());
+
+//     // 2. 쿼리 실행 및 결과 저장
+//     const result = await queryBuilder.getMany(); 
+//     console.log(result);
+
+//     // 3. 결과 반환
+//     return result; 
+//   }
+
+  async findMyList(userId: string) {
     // 1. 쿼리 빌더 생성
     const queryBuilder = this.repo
       .createQueryBuilder('app')
-      .where('app.app_type_code IN (:...types)', { types: ['general', 'knowledge'] })
-      .orWhere('(app.app_type_code = :assistantType AND app.user_id = :userId)', {
+      .where('(app.app_type_code = :assistantType AND app.user_id = :userId)', {
         assistantType: 'assistant',
         userId: String(userId), 
       });
@@ -66,10 +95,15 @@ async findUserList(userId: string) {
 
     // 2. 쿼리 실행 및 결과 저장
     const result = await queryBuilder.getMany(); 
-    console.log(result);
+    //console.log(result);
 
-    // 3. 결과 반환
-    return result; 
+    // 3. 방어 코드: 결과가 없거나 빈 배열일 경우 예외 처리
+    if (!result || result.length === 0) {
+      throw new NotFoundException(`사용자(${userId})의 assistant 앱을 찾을 수 없습니다.`);
+    }
+
+    // 3. 결과가 있을 때만 반환
+    return result;
   }
 
   /** 단건 조회 (myProfile 및 상세 조회 공용) */
