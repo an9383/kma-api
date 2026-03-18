@@ -31,4 +31,8 @@ export class ChatBotEntity {
   @Field()
   @CreateDateColumn({ name: 'created_at', type: 'timestamp', precision: 6 })
   created_at!: Date; // 생성일자
+
+  @Field()
+  @PrimaryColumn({ name: 'sub_app_id', type: 'varchar', length: 100 })
+  sub_app_id!: string; // APP ID
 }

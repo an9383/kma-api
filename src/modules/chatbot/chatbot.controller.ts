@@ -27,8 +27,17 @@ export class ChatBotController {
 
    // chatBotAppId로 단건 조회
   @Get('/get')
-  async findOne(@Query('app_id') app_id: string) {
-    const items = await this.chatBotResolver.chatBot(app_id);
+  async findOne(@Query('sub_app_id') sub_app_id: string) {
+    console.log(sub_app_id);
+    const items = await this.chatBotResolver.chatBot(sub_app_id);
+    return { items };
+  }
+
+  // chatBotAppId로 단건 조회
+  @Get('/getlist')
+  async findList(@Query('user_id') user_id: string) {
+    console.log(user_id);
+    const items = await this.chatBotResolver.chatBotUser(user_id);
     return { items };
   }
 
@@ -40,9 +49,8 @@ export class ChatBotController {
   ): Promise<ChatBotEntity> {
     const { input_type, input_value, app_name, app_type_code, user_id, app_description, is_active } = dto;
     this.logger.log({ input_type, input_value, app_name, app_type_code, user_id, app_description, is_active });
-    
-    // ✅ 2. 객체를 새로 만들지 말고 dto 변수를 그대로 넘깁니다!
-    return this.chatBotResolver.chatBotUpsert(room_id, dto); 
+
+    return this.chatBotResolver.chatBotUpsert(room_id, dto);
   }
 
   @Delete('/delete')

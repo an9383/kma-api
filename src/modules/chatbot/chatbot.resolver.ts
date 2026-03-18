@@ -23,8 +23,15 @@ export class ChatBotResolver {
   }
 
   @Query(() => ChatBotEntity)
-  chatBot(@Args('chatbot_id') app_id: string) {
-    return this.svc.findOne(app_id);
+  chatBot(@Args('sub_app_id') sub_app_id: string) {
+    console.log(sub_app_id);
+    return this.svc.findOne(sub_app_id);
+  }
+
+  @Query(() => ChatBotEntity)
+  chatBotUser(@Args('user_id') user_id: string) {
+    console.log(user_id);
+    return this.svc.findUserList(user_id);
   }
 
   /**

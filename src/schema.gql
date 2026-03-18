@@ -37,6 +37,7 @@ type ChatBotEntity {
   app_type_code: String!
   created_at: DateTime!
   is_active: Boolean!
+  sub_app_id: String!
   user_id: String!
 }
 
@@ -167,9 +168,10 @@ type Mutation {
 type Query {
   archive(archive_id: String!): ArchiveEntity!
   archiveList: [ArchiveEntity!]!
-  chatBot(chatbot_id: String!): ChatBotEntity!
+  chatBot(sub_app_id: String!): ChatBotEntity!
   chatBotList: [ChatBotEntity!]!
   chatBotTypeList(app_type_code: String!): ChatBotEntity!
+  chatBotUser(user_id: String!): ChatBotEntity!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
