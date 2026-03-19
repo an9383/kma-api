@@ -37,7 +37,7 @@ type ChatBotEntity {
   app_type_code: String!
   created_at: DateTime!
   is_active: Boolean!
-  sub_app_id: String!
+  updated_at: DateTime!
   user_id: String!
 }
 
@@ -49,6 +49,14 @@ input ChatBotUpsertInput {
   input_value: String!
   is_active: Boolean!
   output_type: String!
+  user_id: String!
+}
+
+type ChatRoomEntity {
+  created_at: DateTime
+  description: String
+  room_id: String!
+  updated_at: DateTime
   user_id: String!
 }
 
@@ -78,22 +86,6 @@ input CommonCodeUpsertInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
-
-type GeneralEntity {
-  created_at: DateTime
-  room_id: String!
-  updated_at: DateTime
-  user_id: String!
-}
-
-input GeneralUpsertInput {
-  app_id: String!
-  created_at: String
-  room_id: String!
-  room_name: String!
-  updated_at: String
-  user_id: String!
-}
 
 type LoginResponse {
   accessToken: String!
@@ -151,11 +143,11 @@ type Mutation {
   archiveUpsert(body: ArchiveUpsertInput!, room_id: String!): ArchiveEntity!
   chatBotDelete(room_id: String!): Boolean!
   chatBotUpsert(body: ChatBotUpsertInput!, room_id: String!): ChatBotEntity!
+  chatRoomDelete(room_id: String!): Boolean!
+  chatRoomUpsert(body: UpdateChatRoomDto!, room_id: String!): ChatRoomEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
   comnDelete(comnCd: String!): Boolean!
   comnUpsert(input: CommonCodeUpsertInput!): CommonCodeEntity!
-  generalDelete(room_id: String!): Boolean!
-  generalUpsert(body: GeneralUpsertInput!, room_id: String!): GeneralEntity!
   login(id: String!, pw: String!): LoginResponse!
   memberDelete(userId: String!): Boolean!
   memberUpsert(input: MemberUpsertInput!): MemberEntity!
@@ -175,14 +167,21 @@ type Query {
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
-  general(room_id: String!): GeneralEntity!
-  list: [GeneralEntity!]!
+  general(room_id: String!): ChatRoomEntity!
+  list: [ChatRoomEntity!]!
   member(userId: String!): MemberEntity
   memberList(input: MemberSearchInput): [MemberEntity!]!
   menuList: [MenuEntity!]!
   myProfile: UserEntity
   user(id: String!): UserEntity
   userList(dept: String, keyword: String): [UserEntity!]!
+}
+
+input UpdateChatRoomDto {
+  app_id: String
+  description: String
+  name: String
+  user_id: String!
 }
 
 type UserEntity {

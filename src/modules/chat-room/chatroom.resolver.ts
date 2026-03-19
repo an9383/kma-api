@@ -1,7 +1,7 @@
 import { Args, Mutation, Query, Resolver} from '@nestjs/graphql';
-import { GeneralEntity } from './entities/general.entity';
-import { GeneralService } from './general.service';
-import { GeneralUpsertInput, ChatSessionInput } from './dto/general.input';
+import { ChatRoomEntity } from './entities/chatroom.entity';
+import { ChatRoomService } from './chatroom.service';
+import { ChatRoomInput, RunChatRoomInput, CreateChatRoomInput, UpdateChatRoomDto } from './dto/chatroom.input';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard'; 
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -10,16 +10,16 @@ import { Roles } from '../auth/decorators/roles.decorator';
 /**
  * 회원 도메인의 데이터 조작 및 조회를 담당하는 인터페이스 레이어입니다
  */
-@Resolver(() => GeneralEntity)
-export class GeneralResolver {
-  constructor(private svc: GeneralService) {}
+@Resolver(() => ChatRoomEntity)
+export class ChatRoomResolver {
+  constructor(private svc: ChatRoomService) {}
 
-  @Query(() => [GeneralEntity])
+  @Query(() => [ChatRoomEntity])
   async list() {
     return this.svc.list();
   }
 
-  @Query(() => GeneralEntity)
+  @Query(() => ChatRoomEntity)
   general(@Args('room_id') room_id: string) {
     return this.svc.findOne(room_id);
   }
@@ -43,8 +43,8 @@ export class GeneralResolver {
    */
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles('ADMIN')
-  @Mutation(() => GeneralEntity)
-  generalUpsert(@Args('room_id') room_id: string, @Args('body') body: GeneralUpsertInput) {
+  @Mutation(() => ChatRoomEntity)
+  chatRoomUpsert(@Args('room_id') room_id: string, @Args('body') body: UpdateChatRoomDto) {
     return this.svc.upsert(room_id, body);    
   }
 
@@ -55,7 +55,7 @@ export class GeneralResolver {
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @Mutation(() => Boolean)
-  generalDelete(@Args('room_id') room_id: string) {
+  chatRoomDelete(@Args('room_id') room_id: string) {
     return this.svc.remove(room_id);
   }
 }

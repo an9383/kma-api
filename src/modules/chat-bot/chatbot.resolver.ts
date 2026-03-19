@@ -47,7 +47,7 @@ export class ChatBotResolver {
     @Args('body', { type: () => ChatBotUpsertInput }) body: ChatBotUpsertInput 
   ) {
     this.logger.log(room_id, body)
-    return this.svc.upsert(room_id, body);
+    return this.svc.upsertApps(room_id, body);
   }
   
   /**
