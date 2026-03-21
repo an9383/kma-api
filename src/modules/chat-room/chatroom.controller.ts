@@ -3,7 +3,6 @@ import { ApiTags, ApiParam, ApiBody } from '@nestjs/swagger';
 import { ChatRoomService } from './chatroom.service';
 import { ChatRoomEntity } from './entities/chatroom.entity';
 import { ChatRoomInput, RunChatRoomInput, CreateChatRoomInput, UpdateChatRoomDto } from './dto/chatroom.input';
-
 import { ChatRoomResolver } from './chatroom.resolver';
 import { Subject, Observable } from 'rxjs';
 
@@ -71,20 +70,6 @@ export class ChatRoomController {
     // 서비스 로직 실행 (통을 넘겨주어 서비스에서 데이터를 채워 넣도록 함)
     this.chatRoomService.runChatSession(stream, session_id, app_type, body, subject);
 
-    // 프론트엔드로는 관찰 가능한 형태(Observable)로 반환
-    return subject.asObservable();
-  }
-
-  @Post('/history/:session_id')
-  @HttpCode(HttpStatus.OK)
-  @Sse()
-  runChatSessionHistory(@Param('session_id') session_id: string, @Query('stream') stream: boolean, @Query('app_type') app_type: string, @Body() body: RunChatRoomInput): Observable<MessageEvent> {
-    // 데이터 스트림을 담을 통(Subject) 생성
-    const subject = new Subject<MessageEvent>();
-  
-    // 서비스 로직 실행 (통을 넘겨주어 서비스에서 데이터를 채워 넣도록 함)
-    this.chatRoomService.runChatSessionHistory(session_id, stream, app_type, body, subject);
-  
     // 프론트엔드로는 관찰 가능한 형태(Observable)로 반환
     return subject.asObservable();
   }
