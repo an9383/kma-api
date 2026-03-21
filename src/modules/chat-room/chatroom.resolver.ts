@@ -3,7 +3,6 @@ import { ChatRoomEntity } from './entities/chatroom.entity';
 import { ChatRoomService } from './chatroom.service';
 import { ChatRoomInput, RunChatRoomInput, CreateChatRoomInput, UpdateChatRoomDto } from './dto/chatroom.input';
 import { UseGuards } from '@nestjs/common';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard'; 
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 
