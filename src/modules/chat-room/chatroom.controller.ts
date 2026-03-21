@@ -6,7 +6,6 @@ import { ChatRoomInput, RunChatRoomInput, CreateChatRoomInput, UpdateChatRoomDto
 import { ChatRoomResolver } from './chatroom.resolver';
 import { Subject, Observable } from 'rxjs';
 
-
 @ApiTags('api/v1/chat')
 @Controller('api/v1/chat')
 export class ChatRoomController {
@@ -73,6 +72,4 @@ export class ChatRoomController {
     // 프론트엔드로는 관찰 가능한 형태(Observable)로 반환
     return subject.asObservable();
   }
-
-
 }
