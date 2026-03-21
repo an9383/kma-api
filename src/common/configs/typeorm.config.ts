@@ -17,5 +17,10 @@ export function TypeOrmConfig(config: ConfigService): TypeOrmModuleOptions {
     logging: false,
     logger: undefined,
     maxQueryExecutionTime: undefined,
+    // 💡 쿼리 캐싱
+    cache: {
+      type: 'database',
+      tableName: 'query-result-cache',
+    },
   };
 }

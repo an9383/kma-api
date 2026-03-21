@@ -18,9 +18,11 @@ import { HwpModule } from './modules/hwp/hwp.module';
 import { DbQueryLogPatch } from './common/logging/db-query-log-patch';
 import { SystemModule } from './modules/system/system.module';
 import { UserModule } from './modules/user/user.module';
-import { GeneralModule } from './modules/general-chat/general.module';
+import { ChatRoomModule } from './modules/chat-room/chatroom.module';
 import { ArchiveModule } from './modules/chat-archive/archive.module';
 import { FilesModule } from './modules/files/files.module';
+import { ChatBotModule } from './modules/chat-bot/chatbot.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -30,13 +32,24 @@ import { FilesModule } from './modules/files/files.module';
       envFilePath: [`.env.${process.env.APP_ENV ?? 'dev'}`, '.env'],
     }),
 
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (c: ConfigService) => TypeOrmConfig(c),
+    CacheModule.register({
+      isGlobal: true, 
+      ttl: 60000, // 기본 캐시 유지 시간 (밀리초, 60초)
+      max: 100, // 최대 캐시 개수
     }),
 
-    MongoModule,
-    RedisModule,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      //useFactory: (c: ConfigService) => TypeOrmConfig(c),
+      // 쿼리 캐싱 로직
+      useFactory: (c: ConfigService) => ({
+        ...TypeOrmConfig(c),
+        cache: {
+          type: 'database',
+          tableName: 'query-result-cache',
+        },
+      }),
+    }),
 
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -49,9 +62,13 @@ import { FilesModule } from './modules/files/files.module';
         csrfPrevention: false,
       }),
     }),
-    GeneralModule,
+    
+    MongoModule,
+    RedisModule,
+    ChatRoomModule,
     ArchiveModule,
     FilesModule,
+    ChatBotModule,
     HealthModule,
     AuthModule,
     MemberModule,
