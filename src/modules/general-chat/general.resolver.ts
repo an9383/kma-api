@@ -5,7 +5,6 @@ import { GeneralService } from './general.service';
 import { GeneralUpsertInput, GeneralSearchListInput } from './dto/general.input';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../../common/guards/roles.guard';
-import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { UpdateGeneralDto } from './dto/update-general.dto';
 
 /**
