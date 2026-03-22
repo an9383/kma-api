@@ -2,54 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ArchiveEntity {
-  answer: String!
-  app_id: String!
-  archive_id: String!
-  created_at: DateTime!
-  last_app_name: String!
-  last_app_type_code: String!
-  question: String!
-  room_id: String!
-  user_id: String!
-}
-
-input ArchiveUpsertInput {
-  answer: String!
-  app_id: String!
-  created_at: String
-  last_app_name: String!
-  last_app_type_code: String!
-  question: String!
-  user_id: String!
-}
-
 type AuthUser {
   roles: [String!]!
   userId: String!
   userName: String!
-}
-
-type ChatBotEntity {
-  app_description: String!
-  app_id: String!
-  app_name: String!
-  app_type_code: String!
-  created_at: DateTime!
-  is_active: Boolean!
-  updated_at: DateTime!
-  user_id: String!
-}
-
-input ChatBotUpsertInput {
-  app_description: String!
-  app_name: String!
-  app_type_code: String!
-  input_type: String!
-  input_value: String!
-  is_active: Boolean!
-  output_type: String!
-  user_id: String!
 }
 
 type ChatRoomEntity {
@@ -139,10 +95,6 @@ type MenuEntity {
 }
 
 type Mutation {
-  archiveDelete(room_id: String!): Boolean!
-  archiveUpsert(body: ArchiveUpsertInput!, room_id: String!): ArchiveEntity!
-  chatBotDelete(room_id: String!): Boolean!
-  chatBotUpsert(body: ChatBotUpsertInput!, room_id: String!): ChatBotEntity!
   chatRoomDelete(room_id: String!): Boolean!
   chatRoomUpsert(body: UpdateChatRoomDto!, room_id: String!): ChatRoomEntity!
   comnBatchDelete(ids: [String!]!): Boolean!
@@ -158,12 +110,6 @@ type Mutation {
 }
 
 type Query {
-  archive(archive_id: String!): ArchiveEntity!
-  archiveList: [ArchiveEntity!]!
-  chatBot(sub_app_id: String!): ChatBotEntity!
-  chatBotList: [ChatBotEntity!]!
-  chatBotMyList(user_id: String!): ChatBotEntity!
-  chatBotTypeList(app_type_code: String!): ChatBotEntity!
   commonCodesByUpCd(upCd: String!): [CommonCodeEntity!]!
   comnDetailList(upCd: String!): [CommonCodeEntity!]!
   comnMasterList: [CommonCodeEntity!]!
