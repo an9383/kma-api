@@ -19,9 +19,6 @@ import { DbQueryLogPatch } from './common/logging/db-query-log-patch';
 import { SystemModule } from './modules/system/system.module';
 import { UserModule } from './modules/user/user.module';
 import { ChatRoomModule } from './modules/chat-room/chatroom.module';
-import { ArchiveModule } from './modules/chat-archive/archive.module';
-import { FilesModule } from './modules/files/files.module';
-import { ChatBotModule } from './modules/chat-bot/chatbot.module';
 import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
@@ -66,9 +63,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     MongoModule,
     RedisModule,
     ChatRoomModule,
-    ArchiveModule,
-    FilesModule,
-    ChatBotModule,
     HealthModule,
     AuthModule,
     MemberModule,
