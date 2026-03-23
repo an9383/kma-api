@@ -89,6 +89,68 @@ export class ChatRoomService {
     }
   }
 
+  /** 채팅방 수정 및 저장 */
+  async runChatSessionHistory( stream: boolean, session_id: string, app_type: string, body: RunChatRoomInput, subject: Subject<MessageEvent>): Promise<void> {
+
+    const baseUrl = 'https://kma-athena.dev.uracle.co.kr/api/v1/chat';
+
+    const athenaApiUrl = `${baseUrl}/2e30b179-7ff2-4ef0-ae13-b734dc589ef3/run?stream=${stream}&session_id=${session_id}`;
+
+  try {
+    const athenaAuthUrl = process.env.ATHENA_AUTH_URL as string;
+    const Email = process.env.ATHENA_ADMIN_EMAIL as string;
+    const Password = process.env.ATHENA_ADMIN_PASSWORD as string;
+
+    let json;
+    const res = await firstValueFrom(
+      this.httpService.post(athenaAuthUrl, {
+        email: Email,
+        password: Password,
+      })
+    );
+
+    json = res.data; 
+    const token = json?.data?.access_token || json?.access_token; 
+
+    if (!token) {
+      throw new Error('토큰을 찾을 수 없습니다. Auth API 응답 구조를 확인하세요.');
+    }
+    
+    const response = await this.httpService.axiosRef.post(
+        athenaApiUrl,
+        {
+          output_type: body.output_type,
+          input_type: body.input_type,
+          input_value: body.input_value
+        },
+        {
+          responseType: 'stream',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+          }
+        }
+    );
+
+    response.data.on('error', (err: Error) => {
+      console.error('🔥 [Axios 스트림 에러]:', err.message);
+      subject.error(err);
+    });
+  } catch (error) {
+      if (error instanceof AxiosError) {
+        this.log.error(
+          'Athena API 통신 에러:', 
+          error.response?.data || error.message
+        );
+      } else {
+        const standardError = error as Error;
+        this.log.error('알 수 없는 에러:', standardError.message);
+      }
+      
+      throw error;
+    }
+  }
+
 
   /** 채팅방 생성 및 수정 */
   async createChatRoom(room_id: string, body: CreateChatRoomInput): Promise<ChatRoomEntity> {
